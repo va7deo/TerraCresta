@@ -11,7 +11,7 @@ Currently in an alpha state, this core is in active development with assistance 
 
 | Title | Status | Released |
 |------|---------|----------|
-[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta) | **W.I.P** | N |
+[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta) | **W.I.P** | Y |
 [**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Pending | N |
 [**Kid no Hore Hore Daisakusen**](http://adb.arcadeitalia.net/dettaglio_mame.php?game_name=horekid&search_id=) | Pending | N |
 
