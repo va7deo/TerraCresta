@@ -26,30 +26,31 @@ Currently in an alpha state, this core is in active development with assistance 
 # Known Issues
 
 - Clock domains need to be verified  
-- Palette issue (wrong colors)  
 - H/V clock timing for CRT need to be verified  
+- Palette issue (wrong colors, stray green/tan lines)  
+- Sprite flip on boss (right arm)  
+- Protection Chip `nb1412m2` implementation  
 
 ### Clock Information
 
-H-Sync   | V-Sync   | Source    |
----------|----------|-----------|
-kHz      | Hz       |           | 
+H-Sync      | V-Sync      | Source      |
+------------|-------------|-------------|
+15.625 kHz  | 59.323592Hz | DSLogic +   |
 
 ### Crystal Oscillators
 
 Location | Freq (MHz) | Use
 ---------|------------|-------
-N/A      | 8.00       | M68000
-N/A      | 4.00       | Z80
-N/A      | 4.00       | YM3526
+2        | 16.000     | M68000
+X1       | 22.000     | Z80 / YM3526
 
-**Pixel clock:** X.XX MHz
+**Pixel clock:** 6.00 MHz
 
 **Estimated geometry:**
 
-    XXX pixels/line
+    384pixels/line
   
-    XXX pixels/line
+    263 pixels/line
 
 ### Main Components
 
