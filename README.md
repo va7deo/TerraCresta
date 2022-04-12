@@ -33,9 +33,9 @@ Currently in an alpha state, this core is in active development with assistance 
 
 ### Clock Information
 
-H-Sync      | V-Sync      | Source      |
-------------|-------------|-------------|
-15.625 kHz  | 59.323592Hz | DSLogic +   |
+H-Sync      | V-Sync      | Source           |
+------------|-------------|------------------|
+15.625 kHz  | 59.323592Hz | RT5x/DSLogic +   |
 
 ### Crystal Oscillators
 
