@@ -35,7 +35,7 @@ Currently in an alpha state, this core is in active development with assistance 
 
 H-Sync      | V-Sync      | Source           |
 ------------|-------------|------------------|
-15.625 kHz  | 59.323592Hz | RT5x/DSLogic +   |
+15.625 kHz  | 59.323592Hz | [RT5x](https://github.com/va7deo/TerraCresta/blob/main/doc/Logic%20Analyzer/tc_rt5x.jpg)/[DSLogic +](https://github.com/va7deo/TerraCresta/blob/main/doc/Logic%20Analyzer/tc_csync.png)   |
 
 ### Crystal Oscillators
 
@@ -48,7 +48,7 @@ X1       | 22.000     | Z80 / YM3526
 
 **Estimated geometry:**
 
-    384pixels/line
+    384 pixels/line
   
     263 pixels/line
 
