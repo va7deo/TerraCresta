@@ -202,6 +202,8 @@ assign BUTTONS = 0;
 wire [1:0] aspect_ratio = status[9:8];
 wire orientation = ~status[10];
 wire [2:0] scan_lines = status[6:4];
+wire [3:0] hs_offset = status[27:24];
+wire [3:0] vs_offset = status[31:28];
 
 assign VIDEO_ARX = (!aspect_ratio) ? (orientation  ? 8'd176 : 8'd135) : (aspect_ratio - 1'd1);
 assign VIDEO_ARY = (!aspect_ratio) ? (orientation  ? 8'd135 : 8'd176) : 12'd0;
@@ -216,6 +218,8 @@ localparam CONF_STR = {
     "P1OA,Orientation,Horz,Vert;",
     "P1-;",
     "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
+    "P1OOR,H-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
+    "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "DIP;",
 //    "-;",
 //    "P2,Pause options;",
@@ -230,7 +234,7 @@ localparam CONF_STR = {
 
 wire forced_scandoubler;
 wire  [1:0] buttons;
-wire [31:0] status;
+wire [63:0] status;
 wire [10:0] ps2_key;
 wire [15:0] joy0, joy1;
 
@@ -357,26 +361,27 @@ reg user_flip;
 wire pll_locked;
 
 wire clk_sys;
-reg  clk_4M,clk_8M,clk_16M,clk_ym;
+reg  clk_4M,clk_8M,clk_6M,clk_16M,clk_ym;
 
 pll pll
 (
     .refclk(CLK_50M),
     .rst(0),
-    .outclk_0(clk_sys),     // 80
+    .outclk_0(clk_sys),     // 96
     .locked(pll_locked)
 );
 
 reg [5:0] clk16_count;
 reg [5:0] clk8_count;
 reg [5:0] clk4_count;
+reg [5:0] clk6_count;
 reg [15:0] clk_ym_count;
 
 always @ (posedge clk_sys) begin
    
     clk_16M <= ( clk16_count == 0 );
 
-    if ( clk16_count == 4 ) begin
+    if ( clk16_count == 5 ) begin
         clk16_count <= 0;
     end else begin
         clk16_count <= clk16_count + 1;
@@ -384,7 +389,7 @@ always @ (posedge clk_sys) begin
 
     clk_8M <= ( clk8_count == 0 );
 
-    if ( clk8_count == 9 ) begin
+    if ( clk8_count == 11 ) begin
         clk8_count <= 0;
     end else begin
         clk8_count <= clk8_count + 1;
@@ -392,15 +397,23 @@ always @ (posedge clk_sys) begin
 
     clk_4M <= ( clk4_count == 0 );
 
-    if ( clk4_count == 19 ) begin
+    if ( clk4_count == 23 ) begin
         clk4_count <= 0;
     end else begin
         clk4_count <= clk4_count + 1;
     end
+    
+    clk_6M <= ( clk6_count == 0 );
+
+    if ( clk6_count == 15 ) begin
+        clk6_count <= 0;
+    end else begin
+        clk6_count <= clk6_count + 1;
+    end    
      
     clk_ym <= ( clk_ym_count == 0 );
 
-    if ( clk_ym_count == 10239 ) begin  // 4MHz / 512 = 7.8KHz
+    if ( clk_ym_count == 12287 ) begin  // 4MHz / 512 = 7.8KHz
         clk_ym_count <= 0;
     end else begin
         clk_ym_count <= clk_ym_count + 1;
@@ -428,27 +441,36 @@ wire [8:0] vc;
 wire hsync;
 wire vsync;
 
-reg hbl_delay;
-reg vbl_delay;
-reg hsync_delay;
-reg vsync_delay;
+//reg hbl_delay;
+//reg vbl_delay;
+//reg hsync_delay;
+//reg vsync_delay;
+//
+//// 4 clock pipeline to make pixel
+//always @ (posedge clk_sys) begin
+//    if ( clk_4M == 1 ) begin
+//        hbl_delay <= hbl;
+//        vbl_delay <= vbl;
+//
+//        hsync_delay <= hsync;
+//        vsync_delay <= vsync;
+//    end
+//end
+wire hbl_delay, vbl_delay;
 
-// 4 clock pipeline to make pixel
-always @ (posedge clk_sys) begin
-    if ( clk_4M == 1 ) begin
-        hbl_delay <= hbl;
-        vbl_delay <= vbl;
+delay delay_hbl( .clk(clk_6M), .i( hbl ), .o(hbl_delay) ) ;
+delay delay_vbl( .clk(clk_6M), .i( vbl ), .o(vbl_delay) ) ;
 
-        hsync_delay <= hsync;
-        vsync_delay <= vsync;
-    end
-end
+wire [8:0] vc_raw;
+assign vc = vc_raw + 16; 
 
 video_timing video_timing (
     .clk(clk_sys),
-    .clk_pix(clk_8M),
+    .clk_pix(clk_6M),
     .hc(hc),
-    .vc(vc),
+    .vc(vc_raw),
+    .hs_offset(hs_offset),
+    .vs_offset(vs_offset),
     .hbl(hbl),
     .vbl(vbl),
     .hsync(hsync),
@@ -462,85 +484,93 @@ arcade_video #(256,24) arcade_video
         .*,
 
         .clk_video(clk_sys),
-        .ce_pix(clk_8M),
+        .ce_pix(clk_6M),
 
         .RGB_in(rgb[23:0]),
 
         .HBlank(hbl_delay),
         .VBlank(vbl_delay),
-        .HSync(hsync_delay),
-        .VSync(vsync_delay),
+        .HSync(hsync),
+        .VSync(vsync),
 
         .fx(scan_lines)
 );
 
     
-reg  [3:0] gfx1_pix ;
-reg  [3:0] gfx2_pix ;
+wire [11:0] spr_pix = sprite_line_buffer[hc];
 
-wire [9:0] fg_tile = {hc[7:3], vc[7:3] };
+// prom_s = idx 
+wire [7:0]  spr_col_idx = spr_pix[3:0];
+
+wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
 
 wire [9:0] hc_s = hc[7:0] + scroll_x ;
 wire [8:0] vc_s = vc[7:0] + scroll_y ;
 
-wire [11:0] bg_tile = {hc_s[9:4], vc_s[8:4] };
+reg  [3:0] gfx1_pix ;
+reg  [7:0] gfx2_pix ;
 
-// tile attributes
-always @ * begin
-    fg_ram_addr <= fg_tile ;  // [8:0]
-    bg_ram_addr <= bg_tile;
-end    
+wire [11:0] bg_tile = { hc_s[9:4], vc_s[8:4] };
+wire  [9:0] fg_tile = {   hc[7:3],   vc[7:3] };
 
-    
-//wire [3:0] p = ( gfx1_pix < 4'hf ) ? gfx1_pix : gfx2_pix ;
+reg [7:0] pal_idx;
 
-
-wire [7:0] gfxc = 8'hc0 + ( (gfx2_pix[3] == 0 ) ? { bg_ram_dout[12:11] , gfx2_pix } : { bg_ram_dout[14:13] , gfx2_pix } );
-
-wire [11:0] spr_pix = sprite_line_buffer[hc];
-
-// prom_s = idx 
-wire [7:0]  spr_col_idx = spr_pix[3:0];// { 2'b10, ( spr_pix[3] ? spr_pix[11:10] : spr_pix[9:8] ), prom_s[spr_pix[11:4]][3:0] } ;
-
-
-
-wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
-
-always @ * begin
-    rgb <= ( gfx1_pix < 4'hf ) ? 
-        ( ( scroll_x[12] == 1 ) ? 24'b0 : { prom_r[gfx1_pix], 4'b0, prom_g[gfx1_pix], 4'b0, prom_b[gfx1_pix], 4'b0 } ): 
-          ( spr_pix == 0  ) ?
-        ( ( scroll_x[13] == 1 ) ? 24'b0 : { prom_r[gfxc],     4'b0, prom_g[gfxc],     4'b0, prom_b[gfxc],     4'b0 } ) :
-          { prom_r[spi],     4'b0, prom_g[spi],     4'b0, prom_b[spi],     4'b0 };
+always @ ( clk_6M ) begin
+    rgb <=  { prom_r[pal_idx], 4'b0, prom_g[pal_idx], 4'b0, prom_b[pal_idx], 4'b0 } ;
 end
 
-wire    [12:0] gfx1_addr = { fg_ram_dout[7:0], vc[2:0], hc[2:1] };  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
-wire    [7:0]  gfx1_dout;
 
-wire  [15:0] gfx2_addr = { bg_ram_dout[8:0], vc_s[3:0], hc_s[3:1] } ;
-wire  [7:0]  gfx2_dout;
-wire  [63:0] gfx3_dout;
+reg [7:0] gfxc ;
 
+
+reg [15:0] fg_ram_dout_buf;
+reg [15:0] bg_ram_dout_buf;
+
+wire     [7:0] gfx1_dout;
+wire     [7:0] gfx2_dout;
+wire    [63:0] gfx3_dout;
+
+// tile attributes
+assign bg_ram_addr = bg_tile ;
+assign fg_ram_addr = fg_tile ;
+
+reg    [12:0] gfx1_addr;
+reg    [15:0] gfx2_addr;
+
+reg [8:0] hc_r;
+reg [8:0] hc_s_r;
+reg [1:0] gfx2_pal_h;
+reg [1:0] gfx2_pal_l;
     
 always @ (posedge clk_sys) begin
     if ( reset == 1 ) begin
 
-    end else if ( clk_8M == 1 ) begin
-        if ( hc[0] == 0 ) begin 
-            gfx1_pix <= gfx1_dout[3:0] ;
-        end else begin
-            gfx1_pix <= gfx1_dout[7:4] ;
-        end
-
-        if ( hc_s[0] == 0 ) begin 
-            gfx2_pix <= gfx2_dout[3:0] ;
-        end else begin
-            gfx2_pix <= gfx2_dout[7:4] ;
-        end
+    end else if ( clk_6M == 1 ) begin
+    // 0
+        gfx1_addr <= { fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
         
+        gfx2_addr <= { bg_ram_dout[8:0], vc_s[3:0], hc_s[3:1] } ;
+        
+        gfx2_pal_h  <= bg_ram_dout[14:13];
+        gfx2_pal_l  <= bg_ram_dout[12:11];
+        
+        hc_r <= hc;
+        hc_s_r <= hc_s;
+
+        // latch tile attributes
+        bg_ram_dout_buf <= bg_ram_dout;
+    // 1
+        gfx1_pix <= ( hc_r[0] == 0 ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
+
+        gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
+        
+    // 2
+        pal_idx <= ( gfx1_pix < 4'hf ) ? { 4'b0, gfx1_pix } : ( spr_pix == 0 && scroll_x[13] == 0 ) ? gfx2_pix : spi ;        
     end
 end
     
+wire [3:0] gfx2_pen ;
+assign gfx2_pen = ((   hc_s_r[0] == 0 ) ? gfx2_dout[3:0] : gfx2_dout[7:4] )    ;
     
 /// 68k cpu
 
@@ -759,7 +789,7 @@ wire    [3:0] sprite_y_ofs = vc - sprite_y_pos ;
 wire    [3:0] flipped_x = ( sprite_flip_x == 0 ) ? sprite_x_ofs : 15 - sprite_x_ofs;
 wire    [3:0] flipped_y = ( sprite_flip_y == 0 ) ? sprite_y_ofs : 15 - sprite_y_ofs;
 
-wire   [15:0] gfx3_addr = { flipped_x[1], sprite_tile[8:0], sprite_y_ofs[3:0], flipped_x[3:2] };
+wire   [15:0] gfx3_addr = { flipped_x[1], sprite_tile[8:0], flipped_y[3:0], flipped_x[3:2] };
 
 wire    [3:0] gfx3_pix = (sprite_x_ofs[0] == 1 ) ? gfx3_dout[7:4] : gfx3_dout[3:0];
 
@@ -1167,7 +1197,7 @@ ram4kx8dp z80_ram (
     
 //  <!-- gfx1       0x020000-0x021fff 8K -->
 ram8kx8dp gfx1 (
-    .clock_a ( clk_8M ),
+    .clock_a ( clk_6M ),
     .address_a ( gfx1_addr[12:0] ),
     .wren_a ( 1'b0 ),
     .data_a ( ),
@@ -1182,7 +1212,7 @@ ram8kx8dp gfx1 (
     
 //  <!-- gfx2       0x030000-0x03FFFF 64K -->
 ram64kx8dp gfx2 (
-    .clock_a ( clk_8M ),
+    .clock_a ( clk_6M ),
     .address_a ( gfx2_addr[15:0] ),
     .wren_a ( 1'b0 ),
     .data_a ( ),
@@ -1248,7 +1278,7 @@ reg  [11:0] bg_ram_addr;
 wire [15:0] bg_ram_dout;
 
 ram4kx8dp bg_ram_l (
-    .clock_a ( clk_16M ),
+    .clock_a ( clk_8M ),
     .address_a ( m68k_a[11:1] ),
     .wren_a ( !m68k_rw & bg_ram_cs & !m68k_lds_n ),
     .data_a ( m68k_dout[7:0]  ),
@@ -1263,13 +1293,13 @@ ram4kx8dp bg_ram_l (
     );
 
 ram4kx8dp bg_ram_h (
-    .clock_a ( clk_16M ),
+    .clock_a ( clk_8M ),
     .address_a ( m68k_a[11:1] ),
     .wren_a ( !m68k_rw & bg_ram_cs & !m68k_lds_n ),
     .data_a ( m68k_dout[15:8]  ),
     .q_a (  ),
     
-    .clock_b ( clk_sys ),
+    .clock_b ( clk_sys ), 
     .address_b ( bg_ram_addr  ),
     .wren_b ( 1'b0 ),
     .data_b (  ),
@@ -1296,4 +1326,22 @@ ram4kx8dp m68k_ram1_h (
     );
     
     
+endmodule
+
+
+module delay
+(
+    input clk,  
+    input i,
+    output o
+);
+
+reg [3:0] r;
+
+assign o = r[3]; 
+
+always @(posedge clk) begin
+    r <= { r[2:0], i };
+end
+
 endmodule
