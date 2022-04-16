@@ -33,6 +33,13 @@ module emu
     //Base video clock. Usually equals to CLK_SYS.
     output        CLK_VIDEO,
 
+    //Enable Y/C output
+`ifdef MISTER_ENABLE_YC
+    output [39:0] CHROMA_PHASE_INC,
+    output        YC_EN,
+    output        PALFLAG,
+`endif
+
     //Multiple resolutions are supported using different CE_PIXEL rates.
     //Must be based on CLK_VIDEO
     output        CE_PIXEL,
@@ -205,8 +212,8 @@ wire [2:0] scan_lines = status[6:4];
 wire [3:0] hs_offset = status[27:24];
 wire [3:0] vs_offset = status[31:28];
 
-assign VIDEO_ARX = (!aspect_ratio) ? (orientation  ? 8'd176 : 8'd135) : (aspect_ratio - 1'd1);
-assign VIDEO_ARY = (!aspect_ratio) ? (orientation  ? 8'd135 : 8'd176) : 12'd0;
+assign VIDEO_ARX = (!aspect_ratio) ? (orientation  ? 8'd4 : 8'd3) : (aspect_ratio - 1'd1);
+assign VIDEO_ARY = (!aspect_ratio) ? (orientation  ? 8'd3 : 8'd4) : 12'd0;
 
 `include "build_id.v" 
 localparam CONF_STR = {
@@ -514,7 +521,6 @@ arcade_video #(256,24) arcade_video
     assign PALFLAG = status[2];
 `endif
 
-    
 wire [11:0] spr_pix = sprite_line_buffer[hc];
 
 // prom_s = idx 
