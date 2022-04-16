@@ -384,7 +384,7 @@ always @ (posedge clk_sys) begin
     if ( clk16_count == 5 ) begin
         clk16_count <= 0;
     end else begin
-        clk16_count <= clk16_count + 1;
+        clk16_count <= clk16_count + 1; 
     end
 
     clk_8M <= ( clk8_count == 0 );

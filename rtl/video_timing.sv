@@ -15,7 +15,7 @@ module video_timing
     output reg  vsync,
     
     output reg  hbl,
-    output reg  vbl
+    output reg  vbl 
 );
 
 // 224x256 timings
