@@ -1,5 +1,4 @@
 
-
 # Nichibutsu M68000 (Terra Cresta) FPGA Implementation
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O). 
@@ -30,9 +29,9 @@ Currently in an alpha state, this core is in active development with assistance 
 - ~~H/V clock timing for CRT need to be verified~~  
 - ~~Palette issue (wrong colors, stray green/tan lines)~~  
 - ~~Sprite flip on boss (right arm)~~  
-- Screen Flip
-- Dot Crawl on Y/C video output
-- Reverse engineer Terra Force and draw schematics
+- Screen Flip Implementation  
+- Dot Crawl on Y/C video output  
+- Reverse engineer Terra Force and provide schematics  
 - Protection Chip `nb1412m2` implementation  
 
 ### Clock Information
@@ -67,8 +66,9 @@ IC (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola
 
 # PCB Check List
 
-FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap.
-Currently in an alpha state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
+FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. 
+
+Currently the FPGA implementation is in beta, reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
 
 **Terra Cresta YM2203 OPN Type PCB** donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich).
 
