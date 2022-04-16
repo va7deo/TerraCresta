@@ -20,14 +20,14 @@ module video_timing
 
 // 6MHz
 wire [8:0] HBL_START  = 256;
-wire [8:0] HS_START   = 296;
-wire [8:0] HS_END     = 328;
+wire [8:0] HS_START   = 300;
+wire [8:0] HS_END     = 332;
 wire [8:0] HTOTAL     = 383;
 
 wire [8:0] VBL_START  = 223;
 wire [8:0] VBL_END    = 263;
-wire [8:0] VS_START   = 240;
-wire [8:0] VS_END     = 248;
+wire [8:0] VS_START   = 235;
+wire [8:0] VS_END     = 243;
 wire [8:0] VTOTAL     = 263;
 
 reg [8:0] v;

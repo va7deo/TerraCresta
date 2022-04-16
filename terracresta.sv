@@ -218,6 +218,7 @@ localparam CONF_STR = {
     "P1OA,Orientation,Horz,Vert;",
     "P1-;",
     "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
+    "P1OM,Video Signal,RGBS/YPbPr,Y/C;",
     "P1OOR,H-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "DIP;",
@@ -495,6 +496,23 @@ arcade_video #(256,24) arcade_video
 
         .fx(scan_lines)
 );
+
+/* 	Phase Accumulator Increments (Fractional Size 32, look up size 8 bit, total 40 bits)
+    Increment Calculation - (Output Clock * 2 ^ Word Size) / Reference Clock
+    Example
+    NTSC = 3.579545
+    W = 40 ( 32 bit fraction, 8 bit look up reference)
+    Ref CLK = 42.954544 (This could us any clock)
+
+    NTSC_Inc = 3.579545333 * 2 ^ 40 / 96 = 40997413706
+*/
+
+// SET PAL and NTSC TIMING
+`ifdef MISTER_ENABLE_YC
+    assign CHROMA_PHASE_INC = PALFLAG ? 40'd40997413706 : 40'd40997413706;
+    assign YC_EN =  status[21];
+    assign PALFLAG = status[2];
+`endif
 
     
 wire [11:0] spr_pix = sprite_line_buffer[hc];
