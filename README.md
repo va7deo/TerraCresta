@@ -1,4 +1,5 @@
 
+
 # Nichibutsu M68000 (Terra Cresta) FPGA Implementation
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O). 
@@ -11,7 +12,7 @@ Currently in an alpha state, this core is in active development with assistance 
 
 | Title | Status | Released |
 |------|---------|----------|
-[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta) | **W.I.P** | Y |
+[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta) | **Beta** | Y |
 [**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Pending | N |
 [**Kid no Hore Hore Daisakusen**](http://adb.arcadeitalia.net/dettaglio_mame.php?game_name=horekid&search_id=) | Pending | N |
 
@@ -25,10 +26,13 @@ Currently in an alpha state, this core is in active development with assistance 
 
 # Known Issues
 
-- Clock domains need to be verified  
-- H/V clock timing for CRT need to be verified  
-- Palette issue (wrong colors, stray green/tan lines)  
-- Sprite flip on boss (right arm)  
+- ~~Clock domains need to be verified~~  
+- ~~H/V clock timing for CRT need to be verified~~  
+- ~~Palette issue (wrong colors, stray green/tan lines)~~  
+- ~~Sprite flip on boss (right arm)~~  
+- Screen Flip
+- Dot Crawl on Y/C video output
+- Reverse engineer Terra Force and draw schematics
 - Protection Chip `nb1412m2` implementation  
 
 ### Clock Information
@@ -48,7 +52,7 @@ X1       | 22.000     | Z80 / YM3526
 
 **Estimated geometry:**
 
-    384 pixels/line
+    383 pixels/line
   
     263 pixels/line
 
