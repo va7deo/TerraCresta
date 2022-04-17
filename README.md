@@ -34,6 +34,14 @@ Currently in an alpha state, this core is in active development with assistance 
 - Reverse engineer Terra Force and provide schematics  
 - Protection Chip `nb1412m2` implementation  
 
+# PCB Check List
+
+FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. 
+
+Currently the FPGA implementation is in beta, reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
+
+**Terra Cresta YM2203 OPN Type PCB** donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich).
+
 ### Clock Information
 
 H-Sync      | V-Sync      | Source           |
@@ -61,16 +69,7 @@ Location | Chip | Use |
 ---------|------|-----|
 IC (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Main CPU |
 17 D (Bottom Board) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80) | Sound CPU |
-20 D (Bottom Board) | [**Yamaha YM3526**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL) | OPL  |
-
-
-# PCB Check List
-
-FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. 
-
-Currently the FPGA implementation is in beta, reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
-
-**Terra Cresta YM2203 OPN Type PCB** donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich).
+20 D (Bottom Board) | [**Yamaha YM3526**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL) | OPL |
 
 # Support
 
