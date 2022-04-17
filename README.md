@@ -23,7 +23,7 @@ Currently in an alpha state, this core is in active development with assistance 
 | [**t80**](https://opencores.org/projects/t80) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80) | Daniel Wallner |
 | [**jtopl**](https://github.com/jotego/jtopl) | [**Yamaha OPL**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL) | Jose Tejada |
 
-# Known Issues
+# Known Issues / Tasks
 
 - ~~Clock domains need to be verified~~  
 - ~~H/V clock timing for CRT need to be verified~~  
@@ -31,7 +31,7 @@ Currently in an alpha state, this core is in active development with assistance 
 - ~~Sprite flip on boss (right arm)~~  
 - Screen Flip Implementation  
 - Dot Crawl on Y/C video output  
-- Reverse engineer Terra Force and provide schematics  
+- Reverse engineer Terra Cresta and provide schematics  
 - Protection Chip `nb1412m2` implementation  
 
 # PCB Check List
