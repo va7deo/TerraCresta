@@ -4,8 +4,8 @@ module chip_select
 (
     input  [1:0] pcb,
 
-    input [23:0] cpu_a,
-    input        cpu_as_n,
+    input [23:0] m68k_a,
+    input        m68k_as_n,
 
     input [15:0] z80_addr,
     input        MREQ_n,
@@ -13,37 +13,37 @@ module chip_select
     input        M1_n,
 
     // M68K selects
-    output       prog_rom_cs,
-    output       m68k_ram_cs,
-    output       bg_ram_cs,
-    output       m68k_ram1_cs,
-    output       fg_ram_cs,
+    output reg   prog_rom_cs,
+    output reg   m68k_ram_cs,
+    output reg   bg_ram_cs,
+    output reg   m68k_ram1_cs,
+    output reg   fg_ram_cs,
 
-    output       input_p1_cs,
-    output       input_p2_cs,
-    output       input_system_cs,
-    output       input_dsw_cs,
+    output reg   input_p1_cs,
+    output reg   input_p2_cs,
+    output reg   input_system_cs,
+    output reg   input_dsw_cs,
 
-    output       scroll_x_cs,
-    output       scroll_y_cs,
+    output reg   scroll_x_cs,
+    output reg   scroll_y_cs,
 
-    output       sound_latch_cs,
+    output reg   sound_latch_cs,
 
     // Z80 selects
-    output       z80_rom_cs,
-    output       z80_ram_cs,
+    output reg   z80_rom_cs,
+    output reg   z80_ram_cs,
 
-    output       z80_sound0_cs,
-    output       z80_sound1_cs,
-    output       z80_dac1_cs,
-    output       z80_dac2_cs,
-    output       z80_latch_clr_cs,
-    output       z80_latch_r_cs,
+    output reg   z80_sound0_cs,
+    output reg   z80_sound1_cs,
+    output reg   z80_dac1_cs,
+    output reg   z80_dac2_cs,
+    output reg   z80_latch_clr_cs,
+    output reg   z80_latch_r_cs
 
     // other params
-    output reg [15:0] scroll_x,
-    output reg [15:0] scroll_y,
-    output reg [7:0]  sound_latch
+//    output reg [15:0] scroll_x,
+//    output reg [15:0] scroll_y,
+//    output reg [7:0]  sound_latch
 );
 
 localparam pcb_terra_cresta     = 0;
@@ -53,25 +53,15 @@ function m68k_cs;
         input [23:0] base_address;
         input  [7:0] width;
 begin
-    m68k_cs = ( cpu_a >> width == base_address >> width ) & !cpu_as_n;
+    m68k_cs = ( m68k_a >> width == base_address >> width ) & !m68k_as_n;
 end
 endfunction
 
-function z80_mem_cs
+function z80_mem_cs;
         input [15:0] base_address;
         input  [7:0] width;
 begin
-    z80_mem_cs = ( MREQ_n == 0 && z80_addr[15:0] == base_address);
-end
-endfunction
-
-z80_rom_cs = z80_mem_cs( 16'h0000, 15 ) | z80_mem_cs( 16'h8000, 14 );
-z80_ram_cs = z80_mem_cs( 16'hc000,14 );
-
-function z80_mem_cs;
-        input [15:0] address_hi;
-begin
-    z80_mem_cs = ( MREQ_n == 0 && z80_addr[15:0] == address_hi );
+    z80_mem_cs = ( z80_addr >> width == base_address >> width ) & !MREQ_n;
 end
 endfunction
 
@@ -82,6 +72,8 @@ begin
 end
 endfunction
 
+
+always @ (*) begin
     // Memory mapping based on PCB type
     case (pcb)
         pcb_terra_cresta: begin
@@ -101,8 +93,8 @@ endfunction
 
             sound_latch_cs    = m68k_cs( 'h02600c,  1 );
 
-            z80_rom_cs         = z80_mem_cs( 16'h000 );
-            z80_ram_cs         = z80_mem_cs( 16'h000 );
+            z80_rom_cs         = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
+            z80_ram_cs         = z80_mem_cs( 16'hc000,14 );
 
             z80_sound0_cs      = z80_io_cs(  8'h00 );
             z80_sound1_cs      = z80_io_cs(  8'h01 );
@@ -129,8 +121,8 @@ endfunction
 
             sound_latch_cs    = m68k_cs( 'h04600c,  1 );
 
-            z80_rom_cs         = z80_mem_cs( 16'h000 );
-            z80_ram_cs         = z80_mem_cs( 16'h000 );
+            z80_rom_cs         = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
+            z80_ram_cs         = z80_mem_cs( 16'hc000,14 );
 
             z80_sound0_cs      = z80_io_cs(  8'h00 );
             z80_sound1_cs      = z80_io_cs(  8'h01 );
@@ -143,5 +135,4 @@ endfunction
         default:;
     endcase
 end
-
 endmodule
