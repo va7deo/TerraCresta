@@ -57,6 +57,17 @@ begin
 end
 endfunction
 
+function z80_mem_cs
+        input [15:0] base_address;
+        input  [7:0] width;
+begin
+    z80_mem_cs = ( MREQ_n == 0 && z80_addr[15:0] == base_address);
+end
+endfunction
+
+z80_rom_cs = z80_mem_cs( 16'h0000, 15 ) | z80_mem_cs( 16'h8000, 14 );
+z80_ram_cs = z80_mem_cs( 16'hc000,14 );
+
 function z80_mem_cs;
         input [15:0] address_hi;
 begin

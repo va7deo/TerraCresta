@@ -989,18 +989,6 @@ T80pa u_cpu(
     .REG        ()
 );
 
-wire z80_rom_cs          = ( MREQ_n == 0 && z80_addr[15:0]  < 16'hc000 );
-wire z80_ram_cs          = ( MREQ_n == 0 && z80_addr[15:0] >= 16'hc000 );
-
-wire z80_sound0_cs       = ( IORQ_n == 0 && z80_addr[7:0] == 8'h00 );
-wire z80_sound1_cs       = ( IORQ_n == 0 && z80_addr[7:0] == 8'h01 );
-wire z80_dac1_cs         = ( IORQ_n == 0 && z80_addr[7:0] == 8'h02 );
-wire z80_dac2_cs         = ( IORQ_n == 0 && z80_addr[7:0] == 8'h03 );
-wire z80_latch_clr_cs    = ( IORQ_n == 0 && z80_addr[7:0] == 8'h04 );
-wire z80_latch_r_cs      = ( IORQ_n == 0 && z80_addr[7:0] == 8'h06 );
-
-z80_rom_cs = z80_mem_cs( 16'h0000, 15 ) | z80_mem_cs( 16'h8000, 14 );
-
 reg sound_addr ;
 reg  [7:0] sound_data ;
 
