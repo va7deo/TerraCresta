@@ -52,9 +52,9 @@
         <part name="horekid.15" crc="51105741"/>
 
         <!-- audiocpu - starts at 0x70000 -->
-        <part name="11b.bin" crc="49cd3b81"/>
-        <part name="12b.bin" crc="c1eaa938"/>
-        <part name="13b.bin" crc="0a2bc702"/>
+        <part name="11b.bin" crc="49cd3b81" address="0x4000"/>
+        <part name="12b.bin" crc="c1eaa938" address="0x4000"/>
+        <part name="13b.bin" crc="0a2bc702" address="0x4000"/>
         <part repeat="0x2000"> FF</part>
 
         <!-- proms - starts at 0x7E000 -->
@@ -71,7 +71,4 @@
     <rom index="1">
         <part>01</part>
     </rom>
-
-    <!-- Notes:  -->
-    <!-- audiocpu roms must be edited to remove FF. Total size for each rom should be 16384 -->
 </misterromdescription>
