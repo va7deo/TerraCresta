@@ -3,7 +3,7 @@
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O). 
 
-Currently in an alpha state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
+Currently in an beta state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
 
 ![Logo](https://user-images.githubusercontent.com/32810066/160257413-889da2d8-f968-4bd1-9adc-fb22552f0455.png)
 

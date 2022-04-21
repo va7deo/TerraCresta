@@ -11,7 +11,7 @@ set_global_assignment -name VHDL_FILE rtl/t80/T80.vhd
 set_global_assignment -name VHDL_FILE rtl/t80/T80pa.vhd
 
 set_global_assignment -name QIP_FILE rtl/jtopl/hdl/jt26.qip
-set_global_assignment -name VERILOG_FILE rtl/jtopl/hdl/jtopl.v 
+set_global_assignment -name VERILOG_FILE rtl/jtopl/hdl/jtopl.v
 
 set_global_assignment -name QIP_FILE sys/pll_q17.qip
 set_global_assignment -name QIP_FILE sys/pll_hdmi.qip
@@ -21,12 +21,10 @@ set_global_assignment -name CDF_FILE jtag.cdf
 set_global_assignment -name QIP_FILE sys/sys.qip
 set_global_assignment -name SYSTEMVERILOG_FILE terracresta.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/video_timing.sv
+set_global_assignment -name VERILOG_FILE rtl/chip_select.v
 set_global_assignment -name VERILOG_FILE rtl/pause.v
 set_global_assignment -name QIP_FILE rtl/mem/ram4kx8dp.qip
 set_global_assignment -name QIP_FILE rtl/mem/ram64kx8dp.qip
 set_global_assignment -name QIP_FILE rtl/mem/ram8kx8dp.qip
 set_global_assignment -name QIP_FILE rtl/mem/ram32kx8dp.qip
 set_global_assignment -name QIP_FILE rtl/mem/ram64bx64dp.qip
-
-
-

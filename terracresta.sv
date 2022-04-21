@@ -619,29 +619,46 @@ always @ (posedge clk_sys) begin
     end
 end 
 
-//    m68k_cs = ( cpu_a >> width == base_address >> width ) & !m68k_as_n;
+// Chip select mux
+// M68K selects
+wire prog_rom_cs;
+wire m68k_ram_cs;
+wire bg_ram_cs;
+wire m68k_ram1_cs;
+wire fg_ram_cs;
 
-wire prog_rom_cs      = ( m68k_a[23:0]  < 24'h020000 ) & !m68k_as_n ;
-wire m68k_ram_cs      = ( m68k_a[23:0] >= 24'h020000 && m68k_a[23:0] < 24'h022000) & !m68k_as_n ; // 8k
-wire bg_ram_cs        = ( m68k_a[23:0] >= 24'h022000 && m68k_a[23:0] < 24'h023000) & !m68k_as_n ; // 4k
-wire m68k_ram1_cs     = ( m68k_a[23:0] >= 24'h023000 && m68k_a[23:0] < 24'h024000) & !m68k_as_n ; // 4k
-wire fg_ram_cs        = ( m68k_a[23:0] >= 24'h028000 && m68k_a[23:0] < 24'h028800) & !m68k_as_n ; // 2k
+wire input_p1_cs;
+wire input_p2_cs;
+wire input_system_cs;
+wire input_dsw_cs;
 
-wire input_p1_cs      = ( m68k_a[23:0] >= 24'h024000 && m68k_a[23:0] < 24'h024002) & !m68k_as_n ; // P1
-wire input_p2_cs      = ( m68k_a[23:0] >= 24'h024002 && m68k_a[23:0] < 24'h024004) & !m68k_as_n ; // P2
-wire input_system_cs  = ( m68k_a[23:0] >= 24'h024004 && m68k_a[23:0] < 24'h024006) & !m68k_as_n ; // SYSTEM
-wire input_dsw_cs     = ( m68k_a[23:0] >= 24'h024006 && m68k_a[23:0] < 24'h024008) & !m68k_as_n ; // DSW
+wire scroll_x_cs;
+wire scroll_y_cs;
 
-wire scroll_x_cs     = ( m68k_a[23:0] >= 24'h026002 && m68k_a[23:0] < 24'h026004) & !m68k_as_n ; // SCROLL X
-wire scroll_y_cs     = ( m68k_a[23:0] >= 24'h026004 && m68k_a[23:0] < 24'h026006) & !m68k_as_n ; // SCROLL Y
+wire sound_latch_cs;
 
-wire sound_latch_cs  = ( m68k_a[23:0] >= 24'h02600c && m68k_a[23:0] < 24'h02600e) & !m68k_as_n ; // sound latch
+// Z80 selects
+wire z80_rom_cs;
+wire z80_ram_cs;
 
+wire z80_sound0_cs;
+wire z80_sound1_cs;
+wire z80_dac1_cs;
+wire z80_dac2_cs;
+wire z80_latch_clr_cs;
+wire z80_latch_r_cs;
 
+// Select PCB Title and set chip select lines
+reg [1:0] pcb;
 reg [15:0] scroll_x;
 reg [15:0] scroll_y;
 reg [7:0]  sound_latch;
 
+always @(posedge clk_sys)
+    if (ioctl_wr && (ioctl_index==1))
+        pcb <= ioctl_dout;
+
+chip_select cs (.*);
 
 // CPU outputs
 wire m68k_rw         ;    // Read = 1, Write = 0
@@ -982,6 +999,7 @@ wire z80_dac2_cs         = ( IORQ_n == 0 && z80_addr[7:0] == 8'h03 );
 wire z80_latch_clr_cs    = ( IORQ_n == 0 && z80_addr[7:0] == 8'h04 );
 wire z80_latch_r_cs      = ( IORQ_n == 0 && z80_addr[7:0] == 8'h06 );
 
+z80_rom_cs = z80_mem_cs( 16'h0000, 15 ) | z80_mem_cs( 16'h8000, 14 );
 
 reg sound_addr ;
 reg  [7:0] sound_data ;
