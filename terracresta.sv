@@ -524,7 +524,7 @@ arcade_video #(256,24) arcade_video
 wire [11:0] spr_pix = sprite_line_buffer[hc];
 
 // prom_s = idx 
-wire [7:0]  spr_col_idx = spr_pix[3:0];
+//wire [7:0]  spr_col_idx = spr_pix[3:0];
 
 wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
 
@@ -590,7 +590,7 @@ always @ (posedge clk_sys) begin
         gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
         
     // 2
-        pal_idx <= ( gfx1_pix < 4'hf ) ? { 4'b0, gfx1_pix } : ( spr_pix == 0 && scroll_x[13] == 0 ) ? gfx2_pix : spi ;        
+        pal_idx <= ( gfx1_pix < 4'hf ) ? { 4'b0, gfx1_pix } : ( spr_pix == sprite_trans_pen && scroll_x[13] == 0 ) ? gfx2_pix : spi ;        
     end
 end
     
@@ -789,7 +789,7 @@ always @ (posedge clk_sys ) begin
         draw_sprite_state <= 1;
         sprite_buffer_addr <= 0;
     end else if (draw_sprite_state == 1) begin
-        sprite_line_buffer[sprite_x_ofs] <= 0;
+        sprite_line_buffer[sprite_x_ofs] <= sprite_trans_pen;  // 0
         if ( sprite_x_ofs < 255 ) begin
             sprite_x_ofs <= sprite_x_ofs + 1;
         end else begin
