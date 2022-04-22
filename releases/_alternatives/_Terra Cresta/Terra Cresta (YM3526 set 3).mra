@@ -45,21 +45,21 @@
             <part name="8.9d" crc="5a672942" map="10"/>
         </interleave>
 
-        <!-- gfx1 - starts at 0x20000 -->
-        <part name="18.16g" crc="591a3804"/>
-        <part repeat="0xE000"> FF</part>
-
-        <!-- gfx2 - starts at 0x30000 -->
+        <!-- gfx2 - starts at 0x20000 -->
         <part name="9.15f" crc="984a597f"/>
         <part name="10.17f" crc="30e297ff"/>
         <part repeat="0x10000"> FF</part>
 
-        <!-- gfx3 - starts at 0x50000 -->
+        <!-- gfx3 - starts at 0x40000 -->
         <part name="14.6e" crc="bcf7740b"/>
         <part name="15.7e" crc="a70b565c"/>
         <part name="16.6g" crc="4a9ec3e6"/>
         <part name="17.7g" crc="450749fc"/>
         <part repeat="0x10000"> FF</part>
+
+        <!-- gfx1 - starts at 0x60000 -->
+        <part name="18.16g" crc="591a3804"/>
+        <part repeat="0xE000"> FF</part>
 
         <!-- audiocpu - starts at 0x70000 -->
         <part name="11.15b" crc="604c3b11"/>
@@ -67,7 +67,7 @@
         <part name="13.18b" crc="302dc0ab"/>
         <part repeat="0x2000"> FF</part>
 
-        <!-- proms - starts at 0x7E100 -->
+        <!-- proms - starts at 0x7E000 -->
         <part name="3.10f" crc="ce07c544"/>
         <part name="2.11f" crc="566d323a"/>
         <part name="1.12f" crc="7ea63946"/>

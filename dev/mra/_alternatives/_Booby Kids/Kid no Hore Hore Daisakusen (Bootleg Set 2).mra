@@ -29,32 +29,31 @@
             <part name="1.bin" crc="af9cdd7e" map="01"/>
             <part name="5.bin" crc="2df0e086" map="10"/>
         </interleave>
-
         <interleave output="16">
             <part name="2.bin" crc="ee7d52bb" map="01"/>
             <part name="6.bin" crc="375c0c50" map="10"/>
         </interleave>
 
-        <!-- gfx1 - starts at 0x20000 -->
+        <!-- gfx2 - starts at 0x20000 -->
+        <part name="9.bin" crc="da25ae10"/>
+        <part name="10.bin" crc="616e4321"/>
+        <part name="11.bin" crc="8c7d2be2"/>
+        <part name="12.bin" crc="a0066b02"/>
+
+        <!-- gfx3 - starts at 0x40000 -->
+        <part name="14b.bin" crc="a3caa07a"/>
+        <part name="15b.bin" crc="0e48ff8e"/>
+        <part name="16b.bin" crc="e300747a"/>
+        <part name="17b.bin" crc="51105741"/>
+
+        <!-- gfx1 - starts at 0x60000 -->
         <part name="horekid.16" crc="104b77cc"/>
         <part repeat="0xE000"> FF</part>
 
-        <!-- gfx2 - starts at 0x30000 -->
-        <part name="horekid.05" crc="da25ae10"/>
-        <part name="horekid.06" crc="616e4321"/>
-        <part name="horekid.07" crc="8c7d2be2"/>
-        <part name="horekid.08" crc="a0066b02"/>
-
-        <!-- gfx3 - starts at 0x50000 -->
-        <part name="horekid.12" crc="a3caa07a"/>
-        <part name="horekid.13" crc="0e48ff8e"/>
-        <part name="horekid.14" crc="e300747a"/>
-        <part name="horekid.15" crc="51105741"/>
-
         <!-- audiocpu - starts at 0x70000 -->
-        <part name="11b.bin" crc="49cd3b81" address="0x4000"/>
-        <part name="12b.bin" crc="c1eaa938" address="0x4000"/>
-        <part name="13b.bin" crc="0a2bc702" address="0x4000"/>
+        <part name="horekid.09" crc="49cd3b81"/>
+        <part name="horekid.10" crc="c1eaa938"/>
+        <part name="horekid.11" crc="0a2bc702"/>
         <part repeat="0x2000"> FF</part>
 
         <!-- proms - starts at 0x7E000 -->
@@ -65,7 +64,7 @@
 
         <!-- user1 - starts at 0x7E400 -->
         <part name="kid_prom.4e" crc="e4fb54ee"/>
-        <!-- Total 0x88500 bytes - 545 kBytes -->
+        <!-- Total 0x7E500 bytes - 505 kBytes -->
     </rom>
 
     <rom index="1">
