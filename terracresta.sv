@@ -558,8 +558,8 @@ wire    [63:0] gfx3_dout;
 assign bg_ram_addr = bg_tile ;
 assign fg_ram_addr = fg_tile ;
 
-reg    [12:0] gfx1_addr;
-reg    [15:0] gfx2_addr;
+reg    [13:0] gfx1_addr;
+reg    [16:0] gfx2_addr;
 
 reg [8:0] hc_r;
 reg [8:0] hc_s_r;
@@ -571,9 +571,10 @@ always @ (posedge clk_sys) begin
 
     end else if ( clk_6M == 1 ) begin
     // 0
-        gfx1_addr <= { fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
+        //gfx1_addr <= { ( (pcb == 0 ) ? 1'b0 : fg_ram_dout[8] ) , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
+        gfx1_addr <= { 1'b0 , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
         
-        gfx2_addr <= { bg_ram_dout[8:0], vc_s[3:0], hc_s[3:1] } ;
+        gfx2_addr <= { bg_ram_dout[9:0], vc_s[3:0], hc_s[3:1] } ;
         
         gfx2_pal_h  <= bg_ram_dout[14:13];
         gfx2_pal_l  <= bg_ram_dout[12:11];
@@ -687,6 +688,8 @@ wire m68k_vpa_n = ~int_ack;//( m68k_lds_n == 0 && m68k_fc == 3'b111 ); // int ac
 reg int_ack ;
 reg [1:0] vbl_sr;
 
+wire [3:0] sprite_trans_pen = (pcb == 0) ? 4'd0 : 4'd15;
+
 // vblank handling 
 // process interrupt and sprite buffering
 always @ (posedge clk_sys ) begin
@@ -737,7 +740,15 @@ always @ (posedge clk_sys ) begin
             // add 256 to x?
         sprite_x_256 <= sprite_shared_ram_dout[0];
         // add 256 to tile?
-        sprite_tile[9:8] <= { 1'b0, sprite_shared_ram_dout[1] };
+
+        if ( pcb == 0 ) begin
+            sprite_tile[9:8] <= { 1'b0, sprite_shared_ram_dout[1] };
+        end else begin
+//			if( attrs&0x10 ) tile |= 0x100;
+//			if( attrs&0x02 ) tile |= 0x200;
+            sprite_tile[9:8] <= { sprite_shared_ram_dout[1], sprite_shared_ram_dout[4] };
+        end
+        
         // flip x?
         sprite_flip_x <= sprite_shared_ram_dout[2];
         // flip y?
@@ -745,7 +756,7 @@ always @ (posedge clk_sys ) begin
         // colour
         sprite_colour <= sprite_shared_ram_dout[7:4];
 
-       sprite_shared_addr <= sprite_shared_addr + 1 ;
+        sprite_shared_addr <= sprite_shared_addr + 1 ;
 
         copy_sprite_state <= 6; 
     end else if ( copy_sprite_state == 6 ) begin        
@@ -787,7 +798,7 @@ always @ (posedge clk_sys ) begin
         end
     end else if (draw_sprite_state == 2) begin        
         // get current sprite attributes
-        {sprite_tile,sprite_x_pos,sprite_y_pos,sprite_colour,sprite_flip_x,sprite_flip_y} <= sprite_buffer_dout[33:0];
+        {sprite_tile,sprite_x_pos,sprite_y_pos,sprite_colour,sprite_flip_x,sprite_flip_y} <= sprite_buffer_dout; //[34:0];
         draw_sprite_state <= 3;
         sprite_x_ofs <= 0;
     end else if (draw_sprite_state == 3) begin    
@@ -796,7 +807,7 @@ always @ (posedge clk_sys ) begin
         draw_sprite_state <= 3; 
         if ( vc >= sprite_y_pos && vc < ( sprite_y_pos + 16 ) && sprite_x_pos < 256 ) begin
             // fetch bitmap 
-            if ( p[3:0] > 0 ) begin
+            if ( p[3:0] != sprite_trans_pen ) begin
                 sprite_line_buffer[sprite_x_pos] <= p;
             end
             if ( sprite_x_ofs < 15 ) begin
@@ -830,13 +841,60 @@ wire    [3:0] sprite_y_ofs = vc - sprite_y_pos ;
 wire    [3:0] flipped_x = ( sprite_flip_x == 0 ) ? sprite_x_ofs : 15 - sprite_x_ofs;
 wire    [3:0] flipped_y = ( sprite_flip_y == 0 ) ? sprite_y_ofs : 15 - sprite_y_ofs;
 
-wire   [15:0] gfx3_addr = { flipped_x[1], sprite_tile[8:0], flipped_y[3:0], flipped_x[3:2] };
-
 wire    [3:0] gfx3_pix = (sprite_x_ofs[0] == 1 ) ? gfx3_dout[7:4] : gfx3_dout[3:0];
 
 // int spr_col = (u[t>>1]<<8) + (c<<4) + pen ;
 // prom_u = palette bank lookup
-wire   [11:0] p  = { prom_u[sprite_tile[8:1]][3:0], sprite_colour, gfx3_pix};
+wire   [11:0] p ;
+wire   [16:0] gfx3_addr ;
+
+always @ (*) begin
+    if ( pcb == 0 ) begin
+        // terra cresta
+        gfx3_addr = { 1'b0, flipped_x[1], sprite_tile[8:0], flipped_y[3:0], flipped_x[3:2] };
+        
+        p = { prom_u[sprite_tile[8:1]][3:0], sprite_colour, gfx3_pix};
+    end else begin
+        // amazon / hori
+        gfx3_addr = { flipped_x[1],       sprite_tile[9:0], flipped_y[3:0], flipped_x[3:2] };
+
+        p = { prom_u[{sprite_tile[9],sprite_tile[7:2],sprite_tile[8]}][3:0], sprite_colour[3:1], 1'b0, gfx3_pix};
+    end
+end
+
+// sprite_tile[9:8] <= { sprite_shared_ram_dout[1], sprite_shared_ram_dout[4] };
+
+//		int tile = pSource[1]&0xff;
+//		int attrs = pSource[2];
+//		int flipx = attrs&0x04;
+//		int flipy = attrs&0x08;
+//		int color = (attrs&0xf0)>>4;
+//		int sx = (pSource[3] & 0xff) - 0x80 + 256 * (attrs & 1);
+//		int sy = 240 - (pSource[0] & 0xff);
+//
+//		if( transparent_pen )
+//		{
+//			int bank;
+//
+//			if( attrs&0x02 ) tile |= 0x200; // sprite_shared_ram_dout[1]
+//			if( attrs&0x10 ) tile |= 0x100; // sprite_shared_ram_dout[4] 
+//
+//			bank = (tile&0xfc)>>1;
+//			if( tile&0x200 ) bank |= 0x80; // sprite_shared_ram_dout[1]
+//			if( tile&0x100 ) bank |= 0x01; // sprite_shared_ram_dout[4] 
+//
+//			color &= 0xe;
+//			color += 16*(spritepalettebank[bank]&0xf);
+//		}
+//		else
+//		{
+//			if( attrs&0x02 ) tile|= 0x100;
+//			color += 16 * (spritepalettebank[(tile>>1)&0xff] & 0x0f);
+//		}
+
+        
+
+
 
 wire    [7:0] next_y ;
 assign next_y = (vc+1'b1);
@@ -1100,9 +1158,9 @@ wire rom_download = ioctl_download && (ioctl_index==0);
 wire m68k_rom_h_ioctl_wr = rom_download & ioctl_wr & (ioctl_addr  <  24'h020000) & (ioctl_addr[0] == 1);
 wire m68k_rom_l_ioctl_wr = rom_download & ioctl_wr & (ioctl_addr  <  24'h020000) & (ioctl_addr[0] == 0);
 
-wire gfx1_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h020000) & (ioctl_addr <  24'h022000) ;
-wire gfx2_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h030000) & (ioctl_addr <  24'h040000) ;
-wire gfx3_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h050000) & (ioctl_addr <  24'h060000) ;
+wire gfx2_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h020000) & (ioctl_addr <  24'h040000) ;
+wire gfx3_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h040000) & (ioctl_addr <  24'h060000) ;
+wire gfx1_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h060000) & (ioctl_addr <  24'h064000) ;
 
 wire z80_rom_ioctl_wr    = rom_download & ioctl_wr & (ioctl_addr >=  24'h070000) & (ioctl_addr <  24'h07c000) ;
 
@@ -1225,46 +1283,46 @@ ram4kx8dp z80_ram (
     );
 
     
-//  <!-- gfx1       0x020000-0x021fff 8K -->
-ram8kx8dp gfx1 (
+//  <!-- gfx1   ioctl    0x060000-0x063fff 16K -->
+ram16kx8dp gfx1 (
     .clock_a ( clk_6M ),
-    .address_a ( gfx1_addr[12:0] ),
+    .address_a ( gfx1_addr[13:0] ),
     .wren_a ( 1'b0 ),
     .data_a ( ),
     .q_a ( gfx1_dout[7:0] ),
     
     .clock_b ( clk_sys ),
-    .address_b ( ioctl_addr[12:0] ),
+    .address_b ( ioctl_addr[13:0] ),
     .wren_b ( gfx1_ioctl_wr ),
     .data_b ( ioctl_dout  ),
     .q_b( )
     );
     
-//  <!-- gfx2       0x030000-0x03FFFF 64K -->
-ram64kx8dp gfx2 (
+//  <!-- gfx2   ioctl    0x020000-0x03FFFF 128K -->
+ram128kx8dp gfx2 (
     .clock_a ( clk_6M ),
-    .address_a ( gfx2_addr[15:0] ),
+    .address_a ( gfx2_addr[16:0] ),
     .wren_a ( 1'b0 ),
     .data_a ( ),
     .q_a ( gfx2_dout[7:0] ),
     
     .clock_b ( clk_sys ),
-    .address_b ( ioctl_addr[15:0] ),
+    .address_b ( ioctl_addr[16:0] ),
     .wren_b ( gfx2_ioctl_wr ),
     .data_b ( ioctl_dout  ),
     .q_b( )
     );
 
-//  <!-- gfx3 - starts at 0x50000 -->     
-ram64kx8dp gfx3 (
+//  <!-- gfx3   ioctl   0x40000-0x5fffff  128K -->     
+ram128kx8dp gfx3 (
     .clock_a ( clk_sys ),
-    .address_a ( gfx3_addr[15:0] ),
+    .address_a ( gfx3_addr[16:0] ),
     .wren_a ( 1'b0 ),
     .data_a ( ),
     .q_a ( gfx3_dout[7:0] ),
     
     .clock_b ( clk_sys ),
-    .address_b ( ioctl_addr[15:0] ),
+    .address_b ( ioctl_addr[16:0] ),
     .wren_b ( gfx3_ioctl_wr ),
     .data_b ( ioctl_dout  ),
     .q_b( )
