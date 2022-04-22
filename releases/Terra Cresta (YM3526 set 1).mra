@@ -37,7 +37,6 @@
             <part name="4.6d" crc="19387586" map="10"/>
         </interleave>
 
-
         <!-- gfx2 - starts at 0x20000 -->
         <part name="5.15f" crc="984a597f"/>
         <part name="6.17f" crc="30e297ff"/>
