@@ -13,7 +13,7 @@ Currently in an beta state, this core is in active development with assistance f
 |------|---------|----------|
 [**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta) | **Beta** | Y |
 [**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Pending | N |
-[**Kid no Hore Hore Daisakusen**](http://adb.arcadeitalia.net/dettaglio_mame.php?game_name=horekid&search_id=) | Pending | N |
+[**Kid no Hore Hore Daisakusen**](http://adb.arcadeitalia.net/dettaglio_mame.php?game_name=horekid&search_id=) | **Beta** | Y |
 
 ## External Modules
 
@@ -29,6 +29,7 @@ Currently in an beta state, this core is in active development with assistance f
 - ~~H/V clock timing for CRT need to be verified~~  
 - ~~Palette issue (wrong colors, stray green/tan lines)~~  
 - ~~Sprite flip on boss (right arm)~~  
+- Service Menu DIPs in Kid no Hore Hore Daisakusen  
 - Screen Flip Implementation  
 - Dot Crawl on Y/C video output  
 - Reverse engineer Terra Cresta and provide schematics  
