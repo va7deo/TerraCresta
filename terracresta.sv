@@ -229,10 +229,10 @@ localparam CONF_STR = {
     "P1OOR,H-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "DIP;",
-//    "-;",
-//    "P2,Pause options;",
-//    "P2OP,Pause when OSD is open,On,Off;",
-//    "P2OQ,Dim video after 10s,On,Off;",
+    "-;",
+    "P2,Pause options;",
+    "P2OP,Pause when OSD is open,On,Off;",
+    "P2OQ,Dim video after 10s,On,Off;",
     "-;",
     "R0,Reset;",
     "J1,Button 1,Button 2,Button 3,Start,Coin,Pause;",
@@ -310,8 +310,19 @@ always @ (posedge clk_sys) begin
     p2[5:0] <= ~{ p2_buttons[1:0], p2_right, p2_left ,p2_down, p2_up};
     
     sys <= 16'hffff;
-    sys[8] <= ~p1_start ; // coin [5]
-    sys[9] <= ~p2_start ;
+    if ( pcb == 0 ) begin
+        // terra cresta
+        // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
+        // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
+        sys[8] <= ~(p1_start1 | p2_start1) ; // coin [5]
+        sys[9] <= ~(p1_start2 | p2_start2) ;
+    end else begin
+        // hore hore kid
+        // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2 )
+        // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START1 )
+        sys[9] <= ~(p1_start1 | p2_start1) ;
+        sys[8] <= ~(p1_start2 | p2_start2) ; // coin [5]
+    end
     sys[10] <= ~p1_coin ; 
     sys[11] <= ~p2_coin ; 
     sys[13] <= ~sw[3][5] ;
@@ -323,19 +334,23 @@ wire       p1_up      = joy0[3] | key_p1_up;
 wire       p1_down    = joy0[2] | key_p1_down;
 wire       p1_left    = joy0[1] | key_p1_left;
 wire       p1_right   = joy0[0] | key_p1_right;
-wire [2:0] p1_buttons = joy0[6:4] | {key_p1_c, key_p1_b, key_p1_a};
+wire [1:0] p1_buttons = joy0[5:4] | {key_p1_b, key_p1_a};
 
 wire       p2_up      = joy1[3] | key_p2_up;
 wire       p2_down    = joy1[2] | key_p2_down;
 wire       p2_left    = joy1[1] | key_p2_left;
 wire       p2_right   = joy1[0] | key_p2_right;
-wire [2:0] p2_buttons = joy1[6:4] | {key_p2_c, key_p2_b, key_p2_a};
+wire [1:0] p2_buttons = joy1[5:4] | {key_p2_b, key_p2_a};
 
-wire p1_start = joy0[6] | key_p1_start;
-wire p2_start = joy1[6] | key_p2_start;
-wire p1_coin  = joy0[7] | key_p1_coin;
-wire p2_coin  = joy1[7] | key_p2_coin;
-wire b_pause  = joy0[9] | joy1[9];
+wire p1_start1 = joy0[6] | key_p1_start;
+wire p1_start2 = joy0[7] | key_p1_start;
+wire p1_coin   = joy0[8] | key_p1_coin;
+wire b_pause   = joy0[9] | joy1[9];
+
+wire p2_start1 = joy1[6] | key_p2_start;
+wire p2_start2 = joy1[7] | key_p2_start;
+wire p2_coin  =  joy1[8] | key_p2_coin;
+wire p2_start =  joy1[9] | key_p2_start;
 
 // Keyboard handler
 
@@ -357,6 +372,7 @@ pause #(4,4,4,48) pause (
     .user_button(b_pause),
     .pause_request(hs_pause),
     .options(~status[26:25]),
+    .pause_cpu(pause_cpu),
     .OSD_STATUS(0),
     .r(rgb[11:8]),
     .g(rgb[7:4]),
@@ -971,7 +987,7 @@ fx68k fx68k (
 
     // input
     .VPAn( m68k_vpa_n ),  
-    .DTACKn( m68k_dtack_n),     
+    .DTACKn( m68k_dtack_n | pause_cpu ),     
     .BERRn(1'b1), 
     .BRn(1'b1),  
     .BGACKn(1'b1),
@@ -1259,7 +1275,7 @@ ram4kx8dp ram4kx8_L (
     );
     
 // z80 rom (48k)
-ram64kx8dp rom_z80 (
+ram48kx8dp rom_z80 (
     .clock_a ( clk_8M ),
     .address_a ( z80_addr[15:0] ),
     .wren_a ( 1'b0 ),

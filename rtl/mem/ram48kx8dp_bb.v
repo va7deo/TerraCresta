@@ -4,7 +4,7 @@
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: ram8kx8dp.v
+// File Name: ram48kx8dp.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -32,7 +32,7 @@
 //refer to the applicable agreement for further details, at
 //https://fpgasoftware.intel.com/eula.
 
-module ram8kx8dp (
+module ram48kx8dp (
 	address_a,
 	address_b,
 	clock_a,
@@ -44,8 +44,8 @@ module ram8kx8dp (
 	q_a,
 	q_b);
 
-	input	[12:0]  address_a;
-	input	[12:0]  address_b;
+	input	[15:0]  address_a;
+	input	[15:0]  address_b;
 	input	  clock_a;
 	input	  clock_b;
 	input	[7:0]  data_a;
@@ -99,7 +99,7 @@ endmodule
 // Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "0"
 // Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
-// Retrieval info: PRIVATE: MEMSIZE NUMERIC "65536"
+// Retrieval info: PRIVATE: MEMSIZE NUMERIC "393216"
 // Retrieval info: PRIVATE: MEM_IN_BITS NUMERIC "0"
 // Retrieval info: PRIVATE: MIFfilename STRING ""
 // Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "3"
@@ -137,8 +137,8 @@ endmodule
 // Retrieval info: CONSTANT: INDATA_REG_B STRING "CLOCK1"
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone V"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
-// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "8192"
-// Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "8192"
+// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "49152"
+// Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "49152"
 // Retrieval info: CONSTANT: OPERATION_MODE STRING "BIDIR_DUAL_PORT"
 // Retrieval info: CONSTANT: OUTDATA_ACLR_A STRING "NONE"
 // Retrieval info: CONSTANT: OUTDATA_ACLR_B STRING "NONE"
@@ -147,15 +147,15 @@ endmodule
 // Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
 // Retrieval info: CONSTANT: READ_DURING_WRITE_MODE_PORT_A STRING "NEW_DATA_NO_NBE_READ"
 // Retrieval info: CONSTANT: READ_DURING_WRITE_MODE_PORT_B STRING "NEW_DATA_NO_NBE_READ"
-// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "13"
-// Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "13"
+// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "16"
+// Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "16"
 // Retrieval info: CONSTANT: WIDTH_A NUMERIC "8"
 // Retrieval info: CONSTANT: WIDTH_B NUMERIC "8"
 // Retrieval info: CONSTANT: WIDTH_BYTEENA_A NUMERIC "1"
 // Retrieval info: CONSTANT: WIDTH_BYTEENA_B NUMERIC "1"
 // Retrieval info: CONSTANT: WRCONTROL_WRADDRESS_REG_B STRING "CLOCK1"
-// Retrieval info: USED_PORT: address_a 0 0 13 0 INPUT NODEFVAL "address_a[12..0]"
-// Retrieval info: USED_PORT: address_b 0 0 13 0 INPUT NODEFVAL "address_b[12..0]"
+// Retrieval info: USED_PORT: address_a 0 0 16 0 INPUT NODEFVAL "address_a[15..0]"
+// Retrieval info: USED_PORT: address_b 0 0 16 0 INPUT NODEFVAL "address_b[15..0]"
 // Retrieval info: USED_PORT: clock_a 0 0 0 0 INPUT VCC "clock_a"
 // Retrieval info: USED_PORT: clock_b 0 0 0 0 INPUT NODEFVAL "clock_b"
 // Retrieval info: USED_PORT: data_a 0 0 8 0 INPUT NODEFVAL "data_a[7..0]"
@@ -164,8 +164,8 @@ endmodule
 // Retrieval info: USED_PORT: q_b 0 0 8 0 OUTPUT NODEFVAL "q_b[7..0]"
 // Retrieval info: USED_PORT: wren_a 0 0 0 0 INPUT GND "wren_a"
 // Retrieval info: USED_PORT: wren_b 0 0 0 0 INPUT GND "wren_b"
-// Retrieval info: CONNECT: @address_a 0 0 13 0 address_a 0 0 13 0
-// Retrieval info: CONNECT: @address_b 0 0 13 0 address_b 0 0 13 0
+// Retrieval info: CONNECT: @address_a 0 0 16 0 address_a 0 0 16 0
+// Retrieval info: CONNECT: @address_b 0 0 16 0 address_b 0 0 16 0
 // Retrieval info: CONNECT: @clock0 0 0 0 0 clock_a 0 0 0 0
 // Retrieval info: CONNECT: @clock1 0 0 0 0 clock_b 0 0 0 0
 // Retrieval info: CONNECT: @data_a 0 0 8 0 data_a 0 0 8 0
@@ -174,10 +174,10 @@ endmodule
 // Retrieval info: CONNECT: @wren_b 0 0 0 0 wren_b 0 0 0 0
 // Retrieval info: CONNECT: q_a 0 0 8 0 @q_a 0 0 8 0
 // Retrieval info: CONNECT: q_b 0 0 8 0 @q_b 0 0 8 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram8kx8dp.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram8kx8dp.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram8kx8dp.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram8kx8dp.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram8kx8dp_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram8kx8dp_bb.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram48kx8dp.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram48kx8dp.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram48kx8dp.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram48kx8dp.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram48kx8dp_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram48kx8dp_bb.v TRUE
 // Retrieval info: LIB_FILE: altera_mf

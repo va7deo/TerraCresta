@@ -24,7 +24,10 @@ set_global_assignment -name SYSTEMVERILOG_FILE rtl/video_timing.sv
 set_global_assignment -name VERILOG_FILE rtl/chip_select.v
 set_global_assignment -name VERILOG_FILE rtl/pause.v
 set_global_assignment -name QIP_FILE rtl/mem/ram4kx8dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram64kx8dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram8kx8dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram32kx8dp.qip
+set_global_assignment -name QIP_FILE rtl/mem/ram48kx8dp.qip
+set_global_assignment -name QIP_FILE rtl/mem/ram128kx8dp.qip
+set_global_assignment -name QIP_FILE rtl/mem/ram16kx8dp.qip
 set_global_assignment -name QIP_FILE rtl/mem/ram64bx64dp.qip
+set_global_assignment -name QIP_FILE rtl/mem/ram64kx8dp.qip
+
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/pause.sv
