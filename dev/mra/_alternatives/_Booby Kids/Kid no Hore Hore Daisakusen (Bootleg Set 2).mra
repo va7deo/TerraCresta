@@ -20,7 +20,7 @@
         <dip name="Debug Mode" bits="14,15" ids="Off,Off,On,Off"/>
     </switches>
 
-    <buttons names="Dig/Burry,Open/Close Door,Start,Coin" default="A,B,R,L"/>
+    <buttons names="Dig/Burry,Open/Close Door,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
 
     <rom index="0" zip="horekidb2.zip|horekid.zip" md5="None">
 

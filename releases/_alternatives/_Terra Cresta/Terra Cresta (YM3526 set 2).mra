@@ -23,7 +23,7 @@
         <dip name="Service Mode" bits="29" ids="Off,On"/>
     </switches>
 
-    <buttons names="Cannon Beam,Formation,Start,Coin" default="A,B,R,L"/>
+    <buttons names="Cannon Beam,Formation,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
 
     <rom index="0" zip="terracreo.zip|terracre.zip" md5="None">
 
