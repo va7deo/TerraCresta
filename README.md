@@ -29,7 +29,8 @@ Currently in an beta state, this core is in active development with assistance f
 - ~~H/V clock timing for CRT need to be verified~~  
 - ~~Palette issue (wrong colors, stray green/tan lines)~~  
 - ~~Sprite flip on boss (right arm)~~  
-- Service Menu DIPs in Kid no Hore Hore Daisakusen  
+- Service Menu / Debug Mode dipswitch in Kid no Hore Hore Daisakusen  
+- Sprite / Tile offsets in Kid no Hore Hore Daisakusen (Screen Transitions)  
 - Screen Flip Implementation  
 - Dot Crawl on Y/C video output  
 - Reverse engineer Terra Cresta and provide schematics  
@@ -68,7 +69,7 @@ X1       | 22.000     | Z80 / YM3526
 
 Location | Chip | Use |
 ---------|------|-----|
-IC (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Main CPU |
+I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Main CPU |
 17 D (Bottom Board) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80) | Sound CPU |
 20 D (Bottom Board) | [**Yamaha YM3526**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL) | OPL |
 
