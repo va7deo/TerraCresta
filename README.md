@@ -11,17 +11,17 @@ Currently in an beta state, this core is in active development with assistance f
 
 | Title | Status | Released |
 |------|---------|----------|
-[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta) | **Beta** | Y |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Pending | N |
+[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                                                 | **Beta** | Y |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)                                         | Pending | N |
 [**Kid no Hore Hore Daisakusen**](http://adb.arcadeitalia.net/dettaglio_mame.php?game_name=horekid&search_id=) | **Beta** | Y |
 
 ## External Modules
 
 |Name| Purpose | Author |
 |----|---------|--------|
-| [**fx68k**](https://github.com/ijor/fx68k) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Jorge Cwik |
-| [**t80**](https://opencores.org/projects/t80) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80) | Daniel Wallner |
-| [**jtopl**](https://github.com/jotego/jtopl) | [**Yamaha OPL**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL) | Jose Tejada |
+| [**fx68k**](https://github.com/ijor/fx68k)    | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Jorge Cwik |
+| [**t80**](https://opencores.org/projects/t80) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80)           | Daniel Wallner |
+| [**jtopl**](https://github.com/jotego/jtopl)  | [**Yamaha OPL**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL)         | Jose Tejada |
 
 # Known Issues / Tasks
 
@@ -29,18 +29,18 @@ Currently in an beta state, this core is in active development with assistance f
 - ~~H/V clock timing for CRT need to be verified~~  
 - ~~Palette issue (wrong colors, stray green/tan lines)~~  
 - ~~Sprite flip on boss (right arm)~~  
+- ~~Dot Crawl on Y/C video output~~  
 - Service Menu / Debug Mode dipswitch in Kid no Hore Hore Daisakusen  
 - Sprite / Tile offsets in Kid no Hore Hore Daisakusen (Screen Transitions)  
 - Screen Flip Implementation  
-- Dot Crawl on Y/C video output  
 - Reverse engineer Terra Cresta and provide schematics  
 - Protection Chip `nb1412m2` implementation  
 
 # PCB Check List
 
-FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. 
+FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap.
 
-Currently the FPGA implementation is in beta, reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
+Reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
 
 **Terra Cresta YM2203 OPN Type PCB** donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich).
 
@@ -54,8 +54,8 @@ H-Sync      | V-Sync      | Source           |
 
 Location | Freq (MHz) | Use
 ---------|------------|-------
-2        | 16.000     | M68000
-X1       | 22.000     | Z80 / YM3526
+2        | 16.000     | M68000       |
+X1       | 22.000     | Z80 / YM3526 |
 
 **Pixel clock:** 6.00 MHz
 
