@@ -12,16 +12,16 @@ Currently in an beta state, this core is in active development with assistance f
 | Title | Status | Released |
 |------|---------|----------|
 [**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                                                 | **Beta** | Y |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)                                         | Pending | N |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)                                         | Pending  | N |
 [**Kid no Hore Hore Daisakusen**](http://adb.arcadeitalia.net/dettaglio_mame.php?game_name=horekid&search_id=) | **Beta** | Y |
 
 ## External Modules
 
 |Name| Purpose | Author |
 |----|---------|--------|
-| [**fx68k**](https://github.com/ijor/fx68k)    | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Jorge Cwik |
+| [**fx68k**](https://github.com/ijor/fx68k)    | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Jorge Cwik     |
 | [**t80**](https://opencores.org/projects/t80) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80)           | Daniel Wallner |
-| [**jtopl**](https://github.com/jotego/jtopl)  | [**Yamaha OPL**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL)         | Jose Tejada |
+| [**jtopl**](https://github.com/jotego/jtopl)  | [**Yamaha OPL**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL)         | Jose Tejada    |
 
 # Known Issues / Tasks
 
