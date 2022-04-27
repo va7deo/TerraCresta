@@ -806,7 +806,7 @@ always @ (posedge clk_sys ) begin
         // flip x?
         sprite_flip_x <= sprite_shared_ram_dout[2] ^ test_flip_x ;
         // flip y?
-        sprite_flip_y <= sprite_shared_ram_dout[3] ^ test_flip_x ;
+        sprite_flip_y <= sprite_shared_ram_dout[3] ^ test_flip_y ;
         // colour
         sprite_colour <= sprite_shared_ram_dout[7:4];
 
