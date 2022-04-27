@@ -311,13 +311,13 @@ always @ (posedge clk_sys) begin
     
     sys <= 16'hffff;
     if ( pcb == 0 || pcb == 1 ) begin
-        // terra cresta
+        // terracre and amazon
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
         sys[8] <= ~(p1_start1 | p2_start1) ; // coin [5]
         sys[9] <= ~(p1_start2 | p2_start2) ;
     end else begin
-        // hore hore kid
+        // horekid
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START1 )
         sys[9] <= ~(p1_start1 | p2_start1) ;
@@ -345,7 +345,7 @@ wire [1:0] p2_buttons = joy1[5:4] | {key_p2_b, key_p2_a};
 wire p1_start1 = joy0[6] | key_p1_start;
 wire p1_start2 = joy0[7] | key_p1_start;
 wire p1_coin   = joy0[8] | key_p1_coin;
-wire b_pause   = joy0[9] | joy1[9];
+wire b_pause   = joy0[9] | joy1[9] | key_pause;
 
 wire p2_start1 = joy1[6] | key_p2_start;
 wire p2_start2 = joy1[7] | key_p2_start;
@@ -355,12 +355,44 @@ wire p2_start =  joy1[9] | key_p2_start;
 // Keyboard handler
 
 wire key_p1_start, key_p2_start, key_p1_coin, key_p2_coin;
-wire key_test, key_reset, key_service;
+wire key_test, key_reset, key_service, key_pause;
 
-wire key_p1_up, key_p1_left, key_p1_down, key_p1_right, key_p1_a, key_p1_b, key_p1_c;
-wire key_p2_up, key_p2_left, key_p2_down, key_p2_right, key_p2_a, key_p2_b, key_p2_c;
+wire key_p1_up, key_p1_left, key_p1_down, key_p1_right, key_p1_a, key_p1_b;
+wire key_p2_up, key_p2_left, key_p2_down, key_p2_right, key_p2_a, key_p2_b;
 
 wire pressed = ps2_key[9];
+
+always @(posedge clk_sys) begin
+    reg old_state;
+
+    old_state <= ps2_key[10];
+    if(old_state ^ ps2_key[10]) begin
+        casex(ps2_key[8:0])
+            'h016: key_p1_start <= pressed; // 1
+            'h01e: key_p2_start <= pressed; // 2
+            'h02E: key_p1_coin  <= pressed; // 5
+            'h036: key_p2_coin  <= pressed; // 6
+            'h006: key_test     <= pressed; // F2
+            'h004: key_reset    <= pressed; // F3
+            'h046: key_service  <= pressed; // 9
+            'h04D: key_pause    <= pressed; // p
+
+            'hX75: key_p1_up    <= pressed; // up
+            'hX72: key_p1_down  <= pressed; // down
+            'hX6b: key_p1_left  <= pressed; // left
+            'hX74: key_p1_right <= pressed; // right
+            'h014: key_p1_a     <= pressed; // lctrl
+            'h011: key_p1_b     <= pressed; // lalt
+
+            'h02d: key_p2_up    <= pressed; // r
+            'h02b: key_p2_down  <= pressed; // f
+            'h023: key_p2_left  <= pressed; // d
+            'h034: key_p2_right <= pressed; // g
+            'h01c: key_p2_a     <= pressed; // a
+            'h01b: key_p2_b     <= pressed; // s
+        endcase
+    end
+end
 
 // PAUSE SYSTEM
 wire    pause_cpu;
@@ -446,7 +478,7 @@ always @ (posedge clk_sys) begin
 end
 
 wire    reset;
-assign  reset = RESET | status[0] | ioctl_download | buttons[1];
+assign  reset = RESET | status[0] | ioctl_download | buttons[1] | key_reset;
 
 //////////////////////////////////////////////////////////////////
 wire rotate_ccw = 1;
