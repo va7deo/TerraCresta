@@ -866,12 +866,12 @@ wire   [16:0] gfx3_addr ;
 
 always @ (*) begin
     if ( pcb == 0 ) begin
-        // terra cresta
+        // terra cresta / amazon
         gfx3_addr = { 1'b0, flipped_x[1], sprite_tile[8:0], flipped_y[3:0], flipped_x[3:2] };
         
         p = { prom_u[sprite_tile[8:1]][3:0], sprite_colour, gfx3_pix};
     end else begin
-        // amazon / hori
+        // hori
         gfx3_addr = { flipped_x[1],       sprite_tile[9:0], flipped_y[3:0], flipped_x[3:2] };
 
         p = { prom_u[{sprite_tile[9],sprite_tile[7:2],sprite_tile[8]}][3:0], sprite_colour[3:1], 1'b0, gfx3_pix};

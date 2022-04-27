@@ -30,4 +30,3 @@ set_global_assignment -name QIP_FILE rtl/mem/ram16kx8dp.qip
 set_global_assignment -name QIP_FILE rtl/mem/ram64bx64dp.qip
 set_global_assignment -name QIP_FILE rtl/mem/ram64kx8dp.qip
 
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/pause.sv
