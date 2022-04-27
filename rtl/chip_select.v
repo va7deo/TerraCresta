@@ -29,6 +29,9 @@ module chip_select
 
     output reg   sound_latch_cs,
 
+    output reg   prot_chip_data_cs,
+    output reg   prot_chip_cmd_cs,
+
     // Z80 selects
     output reg   z80_rom_cs,
     output reg   z80_ram_cs,
@@ -46,8 +49,9 @@ module chip_select
 //    output reg [7:0]  sound_latch
 );
 
-localparam pcb_terra_cresta     = 0;
-localparam pcb_amazon = 1;
+localparam pcb_terra_cresta = 0;
+localparam pcb_amazon       = 1;
+localparam pcb_horekid      = 2;
 
 function m68k_cs;
         input [23:0] base_address;
@@ -93,15 +97,15 @@ always @ (*) begin
 
             sound_latch_cs    = m68k_cs( 'h02600c,  1 );
 
-            z80_rom_cs         = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
-            z80_ram_cs         = z80_mem_cs( 16'hc000,14 );
+            z80_rom_cs        = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
+            z80_ram_cs        = z80_mem_cs( 16'hc000,14 );
 
-            z80_sound0_cs      = z80_io_cs(  8'h00 );
-            z80_sound1_cs      = z80_io_cs(  8'h01 );
-            z80_dac1_cs        = z80_io_cs(  8'h02 );
-            z80_dac2_cs        = z80_io_cs(  8'h03 );
-            z80_latch_clr_cs   = z80_io_cs(  8'h04 );
-            z80_latch_r_cs     = z80_io_cs(  8'h06 );
+            z80_sound0_cs     = z80_io_cs(  8'h00 );
+            z80_sound1_cs     = z80_io_cs(  8'h01 );
+            z80_dac1_cs       = z80_io_cs(  8'h02 );
+            z80_dac2_cs       = z80_io_cs(  8'h03 );
+            z80_latch_clr_cs  = z80_io_cs(  8'h04 );
+            z80_latch_r_cs    = z80_io_cs(  8'h06 );
         end
 
         pcb_amazon: begin
@@ -121,15 +125,49 @@ always @ (*) begin
 
             sound_latch_cs    = m68k_cs( 'h04600c,  1 );
 
-            z80_rom_cs         = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
-            z80_ram_cs         = z80_mem_cs( 16'hc000,14 );
+            prot_chip_data_cs = m68k_cs( 'h070000,  1 );
+            prot_chip_cmd_cs  = m68k_cs( 'h070002,  1 );
 
-            z80_sound0_cs      = z80_io_cs(  8'h00 );
-            z80_sound1_cs      = z80_io_cs(  8'h01 );
-            z80_dac1_cs        = z80_io_cs(  8'h02 );
-            z80_dac2_cs        = z80_io_cs(  8'h03 );
-            z80_latch_clr_cs   = z80_io_cs(  8'h04 );
-            z80_latch_r_cs     = z80_io_cs(  8'h06 );
+            z80_rom_cs        = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
+            z80_ram_cs        = z80_mem_cs( 16'hc000,14 );
+
+            z80_sound0_cs     = z80_io_cs(  8'h00 );
+            z80_sound1_cs     = z80_io_cs(  8'h01 );
+            z80_dac1_cs       = z80_io_cs(  8'h02 );
+            z80_dac2_cs       = z80_io_cs(  8'h03 );
+            z80_latch_clr_cs  = z80_io_cs(  8'h04 );
+            z80_latch_r_cs    = z80_io_cs(  8'h06 );
+        end
+
+        pcb_horekid: begin
+            prog_rom_cs       = m68k_cs( 'h000000, 17 );
+            m68k_ram_cs       = m68k_cs( 'h040000, 13 );
+            bg_ram_cs         = m68k_cs( 'h042000, 12 );
+            m68k_ram1_cs      = m68k_cs( 'h043000, 12 );
+            fg_ram_cs         = m68k_cs( 'h050000, 12 );
+
+            input_p1_cs       = m68k_cs( 'h044000,  1 );
+            input_p2_cs       = m68k_cs( 'h044002,  1 );
+            input_system_cs   = m68k_cs( 'h044004,  1 );
+            input_dsw_cs      = m68k_cs( 'h044006,  1 );
+
+            scroll_x_cs       = m68k_cs( 'h046002,  1 );
+            scroll_y_cs       = m68k_cs( 'h046004,  1 );
+
+            sound_latch_cs    = m68k_cs( 'h04600c,  1 );
+
+            prot_chip_data_cs = m68k_cs( 'h070000,  1 );
+            prot_chip_cmd_cs  = m68k_cs( 'h070002,  1 );
+
+            z80_rom_cs        = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
+            z80_ram_cs        = z80_mem_cs( 16'hc000,14 );
+
+            z80_sound0_cs     = z80_io_cs(  8'h00 );
+            z80_sound1_cs     = z80_io_cs(  8'h01 );
+            z80_dac1_cs       = z80_io_cs(  8'h02 );
+            z80_dac2_cs       = z80_io_cs(  8'h03 );
+            z80_latch_clr_cs  = z80_io_cs(  8'h04 );
+            z80_latch_r_cs    = z80_io_cs(  8'h06 );
         end
 
         default:;

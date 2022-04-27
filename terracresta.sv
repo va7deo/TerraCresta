@@ -654,6 +654,9 @@ wire scroll_y_cs;
 
 wire sound_latch_cs;
 
+wire prot_chip_data_cs;
+wire prot_chip_cmd_cs;
+
 // Z80 selects
 wire z80_rom_cs;
 wire z80_ram_cs;
@@ -704,7 +707,7 @@ wire m68k_vpa_n = ~int_ack;//( m68k_lds_n == 0 && m68k_fc == 3'b111 ); // int ac
 reg int_ack ;
 reg [1:0] vbl_sr;
 
-wire [3:0] sprite_trans_pen = (pcb == 0) ? 4'd0 : 4'd15;
+wire [3:0] sprite_trans_pen = (pcb == 0 || pcb == 1 ) ? 4'd0 : 4'd15;
 
 // vblank handling 
 // process interrupt and sprite buffering
@@ -1179,6 +1182,8 @@ wire gfx3_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h040000)
 wire gfx1_ioctl_wr       = rom_download & ioctl_wr & (ioctl_addr >=  24'h060000) & (ioctl_addr <  24'h064000) ;
 
 wire z80_rom_ioctl_wr    = rom_download & ioctl_wr & (ioctl_addr >=  24'h070000) & (ioctl_addr <  24'h07c000) ;
+
+wire prot_chip_wr        = rom_download & ioctl_wr & (ioctl_addr >=  24'h07c000) & (ioctl_addr <  24'h07e000) ;
 
 wire prom_r_wr           = rom_download & ioctl_wr & (ioctl_addr >=  24'h07E000) & (ioctl_addr <  24'h07E100) ;
 wire prom_g_wr           = rom_download & ioctl_wr & (ioctl_addr >=  24'h07E100) & (ioctl_addr <  24'h07E200) ;
