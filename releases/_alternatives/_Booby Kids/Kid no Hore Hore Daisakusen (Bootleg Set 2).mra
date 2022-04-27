@@ -7,7 +7,7 @@
     <category>Platformer</category>
     <rbf>terracresta</rbf>
 
-    <switches default="80,2F">
+    <switches default="8C,EF">
         <!-- IN0 -->
         <dip name="Lives" bits="0,1" ids="6,5,4,3"/>
         <dip name="Bonus Life" bits="2,3" ids="50k/90k(E),20k/90k(E),50k/60k(E),20k/60k(E)"/>
