@@ -310,7 +310,7 @@ always @ (posedge clk_sys) begin
     p2[5:0] <= ~{ p2_buttons[1:0], p2_right, p2_left ,p2_down, p2_up};
     
     sys <= 16'hffff;
-    if ( pcb == 0 ) begin
+    if ( pcb == 0 || pcb == 1 ) begin
         // terra cresta
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
@@ -760,7 +760,7 @@ always @ (posedge clk_sys ) begin
         sprite_x_256 <= sprite_shared_ram_dout[0];
         // add 256 to tile?
 
-        if ( pcb == 0 ) begin
+        if ( pcb == 0 || pcb == 1 ) begin
             sprite_tile[9:8] <= { 1'b0, sprite_shared_ram_dout[1] };
         end else begin
 //			if( attrs&0x10 ) tile |= 0x100;
@@ -868,7 +868,7 @@ wire   [11:0] p ;
 wire   [16:0] gfx3_addr ;
 
 always @ (*) begin
-    if ( pcb == 0 ) begin
+    if ( pcb == 0 || pcb == 1 ) begin
         // terra cresta / amazon
         gfx3_addr = { 1'b0, flipped_x[1], sprite_tile[8:0], flipped_y[3:0], flipped_x[3:2] };
         
