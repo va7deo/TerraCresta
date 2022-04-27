@@ -21,6 +21,8 @@
         <dip name="Level" bits="14" ids="High,Low"/>
         <dip name="Sprite Test" bits="15" ids="On,Off"/>
         <!-- SYSTEM -->
+        <dip name="Invert Sprite X" bits="16" ids="Off,On"/>
+        <dip name="Invert Sprite Y" bits="17" ids="Off,On"/>
         <dip name="Service Mode" bits="29" ids="Off,On"/>
     </switches>
 

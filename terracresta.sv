@@ -330,6 +330,9 @@ always @ (posedge clk_sys) begin
     dsw1 <= { sw[1], sw[0] };
 end
 
+wire test_flip_x = sw[2][0];
+wire test_flip_y = sw[2][1];
+
 wire       p1_up      = joy0[3] | key_p1_up;
 wire       p1_down    = joy0[2] | key_p1_down;
 wire       p1_left    = joy0[1] | key_p1_left;
@@ -801,9 +804,9 @@ always @ (posedge clk_sys ) begin
         end
         
         // flip x?
-        sprite_flip_x <= sprite_shared_ram_dout[2];
+        sprite_flip_x <= sprite_shared_ram_dout[2] ^ test_flip_x ;
         // flip y?
-        sprite_flip_y <= sprite_shared_ram_dout[3];
+        sprite_flip_y <= sprite_shared_ram_dout[3] ^ test_flip_x ;
         // colour
         sprite_colour <= sprite_shared_ram_dout[7:4];
 
@@ -892,7 +895,8 @@ wire    [3:0] sprite_y_ofs = vc - sprite_y_pos ;
 wire    [3:0] flipped_x = ( sprite_flip_x == 0 ) ? sprite_x_ofs : 15 - sprite_x_ofs;
 wire    [3:0] flipped_y = ( sprite_flip_y == 0 ) ? sprite_y_ofs : 15 - sprite_y_ofs;
 
-wire    [3:0] gfx3_pix = (sprite_x_ofs[0] == 1 ) ? gfx3_dout[7:4] : gfx3_dout[3:0];
+//wire    [3:0] gfx3_pix = (sprite_x_ofs[0] == 1 ) ? gfx3_dout[7:4] : gfx3_dout[3:0];
+wire    [3:0] gfx3_pix = (flipped_x[0] == 1 ) ? gfx3_dout[7:4] : gfx3_dout[3:0];
 
 // int spr_col = (u[t>>1]<<8) + (c<<4) + pen ;
 // prom_u = palette bank lookup
