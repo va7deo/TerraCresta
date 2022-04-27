@@ -1,5 +1,4 @@
 
-
 # Nichibutsu M68000 (Terra Cresta) FPGA Implementation
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O).  Terra Cresta YM2203 OPN Type PCB donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich). 
@@ -79,7 +78,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 - Default cabinet style is set to cocktail; enables multiple controller inputs.
 - Upright cabinet shares a 1L2B control panel layout with two player start buttons (**player is required to switch**).
-![controls](https://user-images.githubusercontent.com/32810066/165510975-94a28a63-9eca-48bb-a917-81ae974d1f60.png)
+![controls](https://user-images.githubusercontent.com/32810066/165549007-14edc2d0-3afa-4017-93ca-5b9c7dec5f1a.png)
 
 | Cabinet Style | Joystick | Push Buttons | Start Buttons | Shared | Default |
 |-|-|-|-|-|-|
