@@ -36,11 +36,13 @@ Currently in an beta state, this core is in active development with assistance f
 - Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)  
 - Screen Flip implementation  
 - Reverse engineer Terra Cresta and provide schematics  
-- Protection Chip `nb1412m2` implementation  
+- Protection IC **nb1412m2** implementation  
 
 # PCB Check List / FPGA Features
 
-FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware.
+FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. 
+
+The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware.
 
 Reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
 
@@ -77,7 +79,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 Location | Chip | Use | PCB | mameset |
 ---------|------|-----|-----|---------|
-15  G | [**Nichibutsu NB1412M42]() | Custom Protection IC | Sei Senshi Amatelass / Soldier Girl Amazon (Nichibutsu USA), Kid no Hore Hore Daisakusen | **amazon**, **amatelass**, **horekid**
+15 G (Top Board) | [**Nichibutsu NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass%20Front.jpg) | Custom Protection IC | Sei Senshi Amatelass / Soldier Girl Amazon (Nichibutsu USA), Kid no Hore Hore Daisakusen | **amazon**, **amatelass**, **horekid**
 
 ### FPGA Implemented Features
 
@@ -94,7 +96,7 @@ Currently a W.I.P, more information to follow.
 ![controls](https://user-images.githubusercontent.com/32810066/165549007-14edc2d0-3afa-4017-93ca-5b9c7dec5f1a.png)
 
 | Cabinet Style | Game | Joystick | Push Button | Start Button | Shared Controls | Dip Default |
-|-|-|-|-|-|-|--|
+|-|-|-|-|-|-|-|
 | Cocktail / Upright | Terra Cresta / Sei Senshi Amatelass | 8-way | 2 | 2 | Upright Only | **Cocktail** |
 | Cocktail / Upright | Kid no Hore Hore Daisakusen | 4-way | 2 | 2 | No | **Upright** |
 
