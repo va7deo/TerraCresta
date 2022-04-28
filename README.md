@@ -1,5 +1,4 @@
 
-
 # Nichibutsu M68000 (Terra Cresta) FPGA Implementation
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O).  Terra Cresta YM2203 OPN Type PCB donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich). 
@@ -33,14 +32,15 @@ Currently in an beta state, this core is in active development with assistance f
 - ~~Dot Crawl on Y/C video output~~  
 - ~~Map Test / Service to keyboard handler~~  
 - ~~Service Menu (push button service menu) in Kid no Hore Hore Daisakusen~~  
+- Additional debugging features (layer toggle)  
 - Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)  
 - Screen Flip implementation  
 - Reverse engineer Terra Cresta and provide schematics  
 - Protection Chip `nb1412m2` implementation  
 
-# PCB Check List
+# PCB Check List / FPGA Features
 
-FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap.
+FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware.
 
 Reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
 
@@ -72,6 +72,16 @@ Location | Chip | Use |
 I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Main CPU |
 17 D (Bottom Board) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80) | Sound CPU |
 20 D (Bottom Board) | [**Yamaha YM3526**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL) | OPL |
+
+### Nichibutsu Custom Components
+
+Location | Chip | Use | PCB | mameset |
+---------|------|-----|-----|---------|
+15  G | [**Nichibutsu NB1412M42]() | Custom Protection IC | Sei Senshi Amatelass / Soldier Girl Amazon (Nichibutsu USA), Kid no Hore Hore Daisakusen | **amazon**, **amatelass**, **horekid**
+
+### FPGA Implemented Features
+
+Currently a W.I.P, more information to follow.
 
 # Control Layout
 
@@ -119,7 +129,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
     - Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.
 
--    This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is below.
+-    This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is above.
 
 # Support
 
