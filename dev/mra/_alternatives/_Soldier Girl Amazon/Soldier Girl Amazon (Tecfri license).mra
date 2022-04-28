@@ -7,7 +7,7 @@
     <category>Shoot 'em up</category>
     <rbf>terracresta</rbf>
 
-    <switches default="DF,FB">
+    <switches default="FF,FB">
         <!-- DSW -->
         <dip name="Lives" bits="0,1" ids="6,5,4,3"/>
         <dip name="Bonus Life" bits="2,3" ids="50k/70k(E),20k/70k(E),50k/40k(E),20k/40k(E)"/>
@@ -21,8 +21,6 @@
         <dip name="Level" bits="14" ids="High,Low"/>
         <dip name="Sprite Test" bits="15" ids="On,Off"/>
         <!-- SYSTEM -->
-        <dip name="Invert Sprite X" bits="16" ids="Off,On"/>
-        <dip name="Invert Sprite Y" bits="17" ids="Off,On"/>
         <dip name="Service Mode" bits="29" ids="Off,On"/>
     </switches>
 
@@ -77,6 +75,6 @@
     </rom>
 
     <rom index="1">
-        <part>01</part>
+        <part>03</part>
     </rom>
 </misterromdescription>

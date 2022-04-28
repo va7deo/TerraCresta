@@ -7,7 +7,7 @@
     <category>Shoot 'em up</category>
     <rbf>terracresta</rbf>
 
-    <switches default="1F,F3">
+    <switches default="3F,FF">
         <!-- DSW -->
         <dip name="Lives" bits="0,1" ids="6,5,4,3"/>
         <dip name="Bonus Life" bits="2,3" ids="50k/90k(E),40k/80k(E),30k/70k(E),20k/60k(E)"/>

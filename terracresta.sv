@@ -225,6 +225,7 @@ localparam CONF_STR = {
     "P1OA,Orientation,Horz,Vert;",
     "P1-;",
     "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
+    "P1-;",
     "P1OL,Video Signal,RGBS/YPbPr,Y/C;",
     "P1OOR,H-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
@@ -233,6 +234,13 @@ localparam CONF_STR = {
 //    "P2,Pause options;",
 //    "P2OP,Pause when OSD is open,On,Off;",
 //    "P2OQ,Dim video after 10s,On,Off;",
+    "P3,Debug;",
+    "P3-;",
+    "P3o0,Invert Sprite X-Axis,Off,On;",
+    "P3o1,Invert Sprite Y-Axis,Off,On;",
+    "P3-;",
+    "P3o2,Turbo,Off,On;",
+    "P3o3,Service Menu,Off,On;",
     "-;",
     "R0,Reset;",
     "J1,Button 1,Button 2,Button 3,Start,Coin,Pause;",
@@ -310,28 +318,37 @@ always @ (posedge clk_sys) begin
     p2[5:0] <= ~{ p2_buttons[1:0], p2_right, p2_left ,p2_down, p2_up};
     
     sys <= 16'hffff;
-    if ( pcb == 0 || pcb == 1 ) begin
+    if ( pcb == 0 || pcb == 1 || pcb == 2 ) begin
         // terracre and amazon
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
         sys[8] <= ~(p1_start1 | p2_start1) ; // coin [5]
         sys[9] <= ~(p1_start2 | p2_start2) ;
     end else begin
-        // horekid
+        // amazont and horekidb2
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START1 )
         sys[9] <= ~(p1_start1 | p2_start1) ;
         sys[8] <= ~(p1_start2 | p2_start2) ; // coin [5]
     end
-    sys[10] <= ~p1_coin ; 
-    sys[11] <= ~p2_coin ; 
-    sys[13] <= ~sw[3][5] ;
-     
+    sys[10] <= ~p1_coin ;
+    sys[11] <= ~p2_coin ;
+    
+    if ( pcb == 0 || pcb == 1 || pcb == 3 ) begin
+        // terracre / amazon
+        sys[13] <= ~sw[3][5];
+        sys[12] <= ~key_service;
+    end else begin
+        // horekid
+        sys[13] <= ~(service | key_test) ;
+        sys[12] <= ~key_service;
+    end
+    
     dsw1 <= { sw[1], sw[0] };
 end
 
-wire test_flip_x = sw[2][0];
-wire test_flip_y = sw[2][1];
+wire test_flip_x   = status [32];
+wire test_flip_y   = status [33];
 
 wire       p1_up      = joy0[3] | key_p1_up;
 wire       p1_down    = joy0[2] | key_p1_down;
@@ -345,15 +362,15 @@ wire       p2_left    = joy1[1] | key_p2_left;
 wire       p2_right   = joy1[0] | key_p2_right;
 wire [1:0] p2_buttons = joy1[5:4] | {key_p2_b, key_p2_a};
 
-wire p1_start1 = joy0[6] | key_p1_start;
-wire p1_start2 = joy0[7] | key_p1_start;
-wire p1_coin   = joy0[8] | key_p1_coin;
-wire b_pause   = joy0[9] | joy1[9] | key_pause;
+wire p1_start1     = joy0[6] | key_p1_start;
+wire p1_start2     = joy0[7] | key_p2_start | status [34];
+wire p1_coin       = joy0[8] | key_p1_coin;
+wire b_pause       = joy0[9] | joy1[9] | key_pause;
+wire service       = joy0[10] | key_test | status [35];
 
-wire p2_start1 = joy1[6] | key_p2_start;
+wire p2_start1 = joy1[6] | key_p1_start;
 wire p2_start2 = joy1[7] | key_p2_start;
 wire p2_coin  =  joy1[8] | key_p2_coin;
-wire p2_start =  joy1[9] | key_p2_start;
 
 // Keyboard handler
 
@@ -704,7 +721,7 @@ wire z80_latch_clr_cs;
 wire z80_latch_r_cs;
 
 // Select PCB Title and set chip select lines
-reg [1:0] pcb;
+reg [2:0] pcb;
 reg [15:0] scroll_x;
 reg [15:0] scroll_y;
 reg [7:0]  sound_latch;
@@ -742,7 +759,7 @@ wire m68k_vpa_n = ~int_ack;//( m68k_lds_n == 0 && m68k_fc == 3'b111 ); // int ac
 reg int_ack ;
 reg [1:0] vbl_sr;
 
-wire [3:0] sprite_trans_pen = (pcb == 0 || pcb == 1 ) ? 4'd0 : 4'd15;
+wire [3:0] sprite_trans_pen = (pcb == 0 || pcb == 1 || pcb == 3 ) ? 4'd0 : 4'd15;
 
 // vblank handling 
 // process interrupt and sprite buffering
@@ -795,7 +812,7 @@ always @ (posedge clk_sys ) begin
         sprite_x_256 <= sprite_shared_ram_dout[0];
         // add 256 to tile?
 
-        if ( pcb == 0 || pcb == 1 ) begin
+        if ( pcb == 0 || pcb == 1 || pcb == 3 ) begin
             sprite_tile[9:8] <= { 1'b0, sprite_shared_ram_dout[1] };
         end else begin
 //			if( attrs&0x10 ) tile |= 0x100;
@@ -904,7 +921,7 @@ wire   [11:0] p ;
 wire   [16:0] gfx3_addr ;
 
 always @ (*) begin
-    if ( pcb == 0 || pcb == 1 ) begin
+    if ( pcb == 0 || pcb == 1 || pcb == 3 ) begin
         // terra cresta / amazon
         gfx3_addr = { 1'b0, flipped_x[1], sprite_tile[8:0], flipped_y[3:0], flipped_x[3:2] };
         

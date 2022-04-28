@@ -2,7 +2,7 @@
 
 module chip_select
 (
-    input  [1:0] pcb,
+    input  [2:0] pcb,
 
     input [23:0] m68k_a,
     input        m68k_as_n,
@@ -52,6 +52,8 @@ module chip_select
 localparam pcb_terra_cresta = 0;
 localparam pcb_amazon       = 1;
 localparam pcb_horekid      = 2;
+localparam pcb_amazont      = 3;
+localparam pcb_horekidb2    = 4;
 
 function m68k_cs;
         input [23:0] base_address;
@@ -108,7 +110,7 @@ always @ (*) begin
             z80_latch_r_cs    = z80_io_cs(  8'h06 );
         end
 
-        pcb_amazon,pcb_horekid: begin
+        pcb_amazon,pcb_horekid,pcb_amazont,pcb_amazont,pcb_horekidb2: begin
             prog_rom_cs       = m68k_cs( 'h000000, 17 );
             m68k_ram_cs       = m68k_cs( 'h040000, 13 );
             bg_ram_cs         = m68k_cs( 'h042000, 12 );

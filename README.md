@@ -1,4 +1,5 @@
 
+
 # Nichibutsu M68000 (Terra Cresta) FPGA Implementation
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O).  Terra Cresta YM2203 OPN Type PCB donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich). 
@@ -11,8 +12,8 @@ Currently in an beta state, this core is in active development with assistance f
 
 | Title | Status | Released |
 |------|---------|----------|
-[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                                                 | **Beta** | Y |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)                                         | Pending  | N |
+[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | **Beta** | Y |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Pending  | N |
 [**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | **Beta** | Y |
 
 ## External Modules
@@ -30,8 +31,8 @@ Currently in an beta state, this core is in active development with assistance f
 - ~~Palette issue (wrong colors, stray green/tan lines)~~  
 - ~~Sprite flip on boss (right arm)~~  
 - ~~Dot Crawl on Y/C video output~~  
-- Map Test / Service to keyboard handler  
-- Service Menu / Debug Mode dipswitch in Kid no Hore Hore Daisakusen  
+- ~~Map Test / Service to keyboard handler~~  
+- ~~Service Menu (push button service menu) in Kid no Hore Hore Daisakusen~~  
 - Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)  
 - Screen Flip implementation  
 - Reverse engineer Terra Cresta and provide schematics  
@@ -76,14 +77,16 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 ### 2L6B Control Panel Layout (Common)
 
-- Default cabinet style is set to cocktail; enables multiple controller inputs.
-- Upright cabinet shares a 1L2B control panel layout with two player start buttons (**player is required to switch**).
+- Upright cabinet shares a 1L2B control panel layout (**players are required to switch**).
+
+- Default cabinet style is set to cocktail for Terra Cresta and Sei Senshi Amatelass. This enables multiple controller inputs.
+
 ![controls](https://user-images.githubusercontent.com/32810066/165549007-14edc2d0-3afa-4017-93ca-5b9c7dec5f1a.png)
 
-| Cabinet Style | Joystick | Push Buttons | Start Buttons | Shared | Default |
-|-|-|-|-|-|-|
-| Cocktail | 8-way | 2 | 2 | No | Yes |
-| Upright | 8-way | 2 | 2 | Yes | No |
+| Cabinet Style | Game | Joystick | Push Button | Start Button | Shared Controls | Dip Default |
+|-|-|-|-|-|-|--|
+| Cocktail / Upright | Terra Cresta / Sei Senshi Amatelass | 8-way | 2 | 2 | Upright Only | **Cocktail** |
+| Cocktail / Upright | Kid no Hore Hore Daisakusen | 4-way | 2 | 2 | No | **Upright** |
 
 ### Keyboard Handler
 
@@ -96,6 +99,27 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 |Player 1|Player 2|
 |--|--|
 |<table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P1 Up</td><td>Up</td></tr><tr><td>P1 Down</td><td>Down</td></tr><tr><td>P1 Left</td><td>Left</td></tr><tr><td>P1 Right</td><td>Right</td></tr><tr><td>P1 Bttn 1</td><td>L-CTRL</td></tr><tr><td>P1 Bttn 2</td><td>L-ALT</td></tr> </table> | <table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P2 Up</td><td>R</td></tr><tr><td>P2 Down</td><td>F</td></tr><tr><td>P2 Left</td><td>D</td></tr><tr><td>P2 Right</td><td>G</td></tr><tr><td>P2 Bttn 1</td><td>A</td></tr><tr><td>P2 Bttn 2</td><td>S</td></tr> </table>|
+
+# Development Debugging
+
+### Sei Senshi Amatelass
+
+- Toggling dip switch 7 will enable invincibility. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development. 
+
+    - In the "Debug" section you will find a toggle for "Turbo". Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
+
+-    This information is not listed in the mame driver and was discovered while adding support for Sei Senshi Amatelass.
+
+
+### Kid no Hore Hore Daisakusen
+
+- The following dip switches are set to default "Debug Mode" and cabinet "Upright". This will unlock the following debug features used for debugging during development.
+
+    - For level selection, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection. 
+
+    - Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.
+
+-    This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is below.
 
 # Support
 
