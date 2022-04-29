@@ -212,6 +212,10 @@ wire [2:0] scan_lines = status[6:4];
 wire [3:0] hs_offset = status[27:24];
 wire [3:0] vs_offset = status[31:28];
 
+wire bg_enable  = ~status[36];
+wire fg_enable  = ~status[37];
+wire spr_enable = ~status[38];
+
 assign VIDEO_ARX = (!aspect_ratio) ? (orientation  ? 8'd4 : 8'd3) : (aspect_ratio - 1'd1);
 assign VIDEO_ARY = (!aspect_ratio) ? (orientation  ? 8'd3 : 8'd4) : 12'd0;
 
@@ -241,6 +245,9 @@ localparam CONF_STR = {
     "P3-;",
     "P3o2,Turbo,Off,On;",
     "P3o3,Service Menu,Off,On;",
+    "P3o4,Background Layer,On,Off;",
+    "P3o5,Foreground Layer,On,Off;",
+    "P3o6,Sprites,On,Off;",
     "-;",
     "R0,Reset;",
     "J1,Button 1,Button 2,Button 3,Start,Coin,Pause;",
@@ -658,7 +665,7 @@ always @ (posedge clk_sys) begin
         gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
         
     // 2
-        pal_idx <= ( gfx1_pix < 4'hf ) ? { 4'b0, gfx1_pix } : ( spr_pix == sprite_trans_pen && scroll_x[13] == 0 ) ? gfx2_pix : spi ;        
+        pal_idx <= ( gfx1_pix < 4'hf && fg_enable ) ? { 4'b0, gfx1_pix } : ( spr_enable == 0 || ( bg_enable == 1 && spr_pix == sprite_trans_pen && scroll_x[13] == 0 )) ? gfx2_pix :  spi ;        
     end
 end
     
