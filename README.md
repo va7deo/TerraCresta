@@ -77,8 +77,8 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 ### Nichibutsu Custom Components
 
-| Location | Use | PCB | ROM set |
-|----------|-----|-----|---------|
+| Location | Chip | Use | PCB | ROM set |
+|----------|-----|------|-----|---------|
 15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <br> <u>**Sei Senshi Amatelass**</u> <br><br> <u>**Soldier Girl Amazon (Nichibutsu USA)**</u> <br><br> <u>**Kid no Hore Hore Daisakusen**</u> | <br>amazon<br><br>amatelass<br><br>horekid |
 
 # Debugging Features
