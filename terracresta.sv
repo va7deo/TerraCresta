@@ -214,7 +214,6 @@ wire [3:0] vs_offset = status[31:28];
 
 wire test_flip_x = status [32];
 wire test_flip_y = status [33];
-wire turbo = sw[0][7] | status [34];
 wire fg_enable   = ~(status[36] | key_fg_enable);
 wire bg_enable   = ~(status[37] | key_bg_enable);
 wire spr_enable  = ~(status[38] | key_spr_enable);
@@ -355,7 +354,7 @@ always @ (posedge clk_sys) begin
         sys[12] <= ~key_service;
     end
     
-    dsw1 <= { sw[1], sw[0] };
+    dsw1 <= { sw[1], { ( sw[0][7] & ~status[34] ), sw[0][6:0] } };
 end
 
 wire       p1_up      = joy0[3] | key_p1_up;
@@ -371,7 +370,7 @@ wire       p2_right   = joy1[0] | key_p2_right;
 wire [1:0] p2_buttons = joy1[5:4] | {key_p2_b, key_p2_a};
 
 wire p1_start1     = joy0[6] | key_p1_start;
-wire p1_start2     = joy0[7] | key_p2_start | turbo;
+wire p1_start2     = joy0[7] | key_p2_start | status [34];
 wire p1_coin       = joy0[8] | key_p1_coin;
 wire b_pause       = joy0[9] | joy1[9] | key_pause;
 wire service       = joy0[10] | key_test | status [35];
@@ -401,7 +400,7 @@ always @(posedge clk_sys) begin
             'h01e: key_p2_start   <= pressed; // 2
             'h02E: key_p1_coin    <= pressed; // 5
             'h036: key_p2_coin    <= pressed; // 6
-            'h006: key_test       <= pressed; // f2
+            'h006: key_test       <= key_test ^ pressed; // f2
             'h004: key_reset      <= pressed; // f3
             'h046: key_service    <= pressed; // 9
             'h04D: key_pause      <= pressed; // p
@@ -420,10 +419,9 @@ always @(posedge clk_sys) begin
             'h01c: key_p2_a       <= pressed; // a
             'h01b: key_p2_b       <= pressed; // s
 
-
-            'h083: key_fg_enable  <= pressed; // f7
-            'h00A: key_bg_enable  <= pressed; // f8
-            'h001: key_spr_enable <= pressed; // f9
+            'h083: key_fg_enable  <= key_fg_enable ^ pressed; // f7
+            'h00A: key_bg_enable  <= key_bg_enable ^ pressed; // f8
+            'h001: key_spr_enable <= key_spr_enable ^ pressed; // f9
         endcase
     end
 end

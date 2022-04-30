@@ -7,7 +7,7 @@
     <category>Shoot 'em up</category>
     <rbf>terracresta</rbf>
 
-    <switches default="DF,FB">
+    <switches default="FF,FB">
         <!-- DSW -->
         <dip name="Lives" bits="0,1" ids="6,5,4,3"/>
         <dip name="Bonus Life" bits="2,3" ids="50k/70k(E),20k/70k(E),50k/40k(E),20k/40k(E)"/>
@@ -20,11 +20,9 @@
         <dip name="Flip Screen" bits="13" ids="On,Off"/>
         <dip name="Level" bits="14" ids="High,Low"/>
         <dip name="Sprite Test" bits="15" ids="On,Off"/>
-        <!-- SYSTEM -->
-        <dip name="Service Mode" bits="29" ids="Off,On"/>
     </switches>
 
-    <buttons names="Sword Beam,Stop Bullet,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
+    <buttons names="Sword Beam,Stop Bullet,Start (1p),Start (2p),Coin,Pause,Service" default="A,B,X,Y,R,L,Start"/>
 
     <rom index="0" zip="amazon.zip" md5="None">
 

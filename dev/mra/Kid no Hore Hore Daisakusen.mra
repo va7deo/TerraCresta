@@ -7,8 +7,8 @@
     <category>Platformer</category>
     <rbf>terracresta</rbf>
 
-    <switches default="00,00">
-        <!-- IN0 -->
+    <switches default="8F,AF">
+        <!-- DSW -->
         <dip name="Lives" bits="0,1" ids="6,5,4,3"/>
         <dip name="Bonus Life" bits="2,3" ids="50k/90k(E),20k/90k(E),50k/60k(E),20k/60k(E)"/>
         <dip name="Demo Sounds" bits="4" ids="On,Off"/>
@@ -20,7 +20,7 @@
         <dip name="Debug Mode" bits="14,15" ids="Off,Off,On,Off"/>
     </switches>
 
-    <buttons names="Dig/Burry,Open/Close Door,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
+    <buttons names="Dig/Burry,Open/Close Door,Start (1p),Start (2p),Coin,Pause,Service" default="A,B,X,Y,R,L,Start"/>
 
     <rom index="0" zip="horekid.zip" md5="None">
 

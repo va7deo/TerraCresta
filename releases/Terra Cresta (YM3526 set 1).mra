@@ -19,8 +19,6 @@
         <dip name="Flip Screen" bits="13" ids="On,Off"/>
         <dip name="Complete Invincibility" bits="14" ids="On,Off"/>
         <dip name="Ship Invincibility" bits="15" ids="On,Off"/>
-        <!-- SYSTEM -->
-        <dip name="Service Mode" bits="29" ids="Off,On"/>
     </switches>
 
     <buttons names="Cannon Beam,Formation,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>

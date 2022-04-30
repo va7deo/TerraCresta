@@ -22,7 +22,7 @@
         <dip name="Sprite Test" bits="15" ids="On,Off"/>
     </switches>
 
-    <buttons names="Sword Beam,Stop Bullet,Start (1p),Start (2p),Coin,Pause,Service" default="A,B,X,Y,R,L,Start"/>
+    <buttons names="Sword Beam,Stop Bullet,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
 
     <rom index="0" zip="amazont.zip|amazon.zip" md5="None">
 

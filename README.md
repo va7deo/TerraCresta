@@ -12,7 +12,7 @@ Currently in an beta state, this core is in active development with assistance f
 | Title | Status | Released |
 |------|---------|----------|
 [**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | **Beta** | Y |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Pending  | N |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | **Beta** | Y |
 [**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | **Beta** | Y |
 
 ## External Modules
@@ -32,11 +32,11 @@ Currently in an beta state, this core is in active development with assistance f
 - ~~Dot Crawl on Y/C video output~~  
 - ~~Map Test / Service to keyboard handler~~  
 - ~~Service Menu (push button service menu) in Kid no Hore Hore Daisakusen~~  
-- Additional debugging features (layer toggle)  
+- ~~Additional debugging features (layer toggle)~~  
 - Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)  
 - Screen Flip implementation  
 - Reverse engineer Terra Cresta and provide schematics  
-- Protection IC **nb1412m2** implementation  
+- Protection IC **NB1412M2** implementation  
 
 # PCB Check List / FPGA Features
 
@@ -77,17 +77,31 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 ### Nichibutsu Custom Components
 
-Location | Chip | Use | PCB | mameset |
----------|------|-----|-----|---------|
-15 G (Top Board) | [**Nichibutsu NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass%20Front.jpg) | Custom Protection IC | Sei Senshi Amatelass / Soldier Girl Amazon (Nichibutsu USA), Kid no Hore Hore Daisakusen | **amazon**, **amatelass**, **horekid**
+| Location | Use | PCB | ROM set |
+|----------|-----|-----|---------|
+15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <br> <u>**Sei Senshi Amatelass**</u> <br><br> <u>**Soldier Girl Amazon (Nichibutsu USA)**</u> <br><br> <u>**Kid no Hore Hore Daisakusen**</u> | <br>amazon<br><br>amatelass<br><br>horekid |
 
-### FPGA Implemented Features
+# Debugging Features
 
-Currently a W.I.P, more information to follow.
+### Layer Toggles / Sprite Flip
+
+-   The three graphics layers are able to be toggled along with sprite flipping in the OSD under the Debug options or by pressing F7-F9 on the keyboard.
+
+|Layer Debug|
+|:--:|
+|<table> <tr><th>Disabled</th><th>Enabled</th></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png )<h4 align="center"> All Layers </h4></td><td> ![fg](https://user-images.githubusercontent.com/32810066/166094056-9a9506c7-65d0-4785-ab2c-df03b28f154d.png)<h4 align="center"> Foreground Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td>![bg](https://user-images.githubusercontent.com/32810066/166094260-69225a34-8b57-4746-bd8c-22f4f09f3a13.png)<h4 align="center"> Background Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td> ![sprite](https://user-images.githubusercontent.com/32810066/166094263-421faaf9-5f14-4ea0-8b82-408e708f7837.png)<h4 align="center"> Sprites Only </h4></td></tr><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![x_axis](https://user-images.githubusercontent.com/32810066/166094329-2b916aeb-73c4-46bf-b1f6-4a9f7ca5a829.png)<h4 align="center"> Sprite Flip X-Axis </h4></td><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![y_axis](https://user-images.githubusercontent.com/32810066/166094330-1fd8d1f9-e420-4acb-ad81-f33fcb4bb3d8.png)<h4 align="center"> Sprite Flip Y-Axis </h4></td></tr></tr> </table> |
+
+<summary><h3>Sei Senshi Amatelass</h3></summary>
+<p>Toggling dip switch 7 will enable invincibility. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development.
+<br><br>In the "Debug" section you will find a toggle for "Turbo". Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
+<br><br>This information is not listed in the mame driver and was discovered while adding support for Sei Senshi Amatelass.</p>
+
+<summary><h3>Kid no Hore Hore Daisakusen</h3></summary>
+<p>The following dip switches are set to default "Debug Mode" and cabinet "Upright". This will unlock the following debug features used for debugging during development.<br><br>For level selection, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection.<br><br>Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.<br><br>This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is above.</p>
 
 # Control Layout
 
-### 2L6B Control Panel Layout (Common)
+### 2L6B Control Panel Layout (Common Layout)
 
 - Upright cabinet shares a 1L2B control panel layout (**players are required to switch**).
 
@@ -112,26 +126,9 @@ Currently a W.I.P, more information to follow.
 |--|--|
 |<table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P1 Up</td><td>Up</td></tr><tr><td>P1 Down</td><td>Down</td></tr><tr><td>P1 Left</td><td>Left</td></tr><tr><td>P1 Right</td><td>Right</td></tr><tr><td>P1 Bttn 1</td><td>L-CTRL</td></tr><tr><td>P1 Bttn 2</td><td>L-ALT</td></tr> </table> | <table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P2 Up</td><td>R</td></tr><tr><td>P2 Down</td><td>F</td></tr><tr><td>P2 Left</td><td>D</td></tr><tr><td>P2 Right</td><td>G</td></tr><tr><td>P2 Bttn 1</td><td>A</td></tr><tr><td>P2 Bttn 2</td><td>S</td></tr> </table>|
 
-# Development Debugging
-
-### Sei Senshi Amatelass
-
-- Toggling dip switch 7 will enable invincibility. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development. 
-
-    - In the "Debug" section you will find a toggle for "Turbo". Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
-
--    This information is not listed in the mame driver and was discovered while adding support for Sei Senshi Amatelass.
-
-
-### Kid no Hore Hore Daisakusen
-
-- The following dip switches are set to default "Debug Mode" and cabinet "Upright". This will unlock the following debug features used for debugging during development.
-
-    - For level selection, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection. 
-
-    - Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.
-
--    This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is above.
+|Debug|
+|--|
+|<table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>Layer (FG)</td><td>F7</td></tr><tr><td>Layer (BG)</td><td>F8</td></tr><tr><td>Layer (SP)</td><td>F9</td></tr> </table> |
 
 # Support
 
