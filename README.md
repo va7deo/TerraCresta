@@ -79,7 +79,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 | Location | Chip | Use | PCB | ROM set |
 |----------|-----|------|-----|---------|
-15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <br> <u>**Sei Senshi Amatelass**</u> <br><br> <u>**Soldier Girl Amazon (Nichibutsu USA)**</u> <br><br> <u>**Kid no Hore Hore Daisakusen**</u> | <br>amazon<br><br>amatelass<br><br>horekid |
+15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <br> <u>**Sei Senshi Amatelass**</u> <br><br> <u>**Soldier Girl Amazon (Nichibutsu USA)**</u> <br><br> <u>**Kid no Hore Hore Daisakusen**</u> | <br>amatelass<br><br>amazon<br><br>horekid |
 
 # Debugging Features
 
@@ -91,12 +91,12 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 |:--:|
 |<table> <tr><th>Disabled</th><th>Enabled</th></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png )<h4 align="center"> All Layers </h4></td><td> ![fg](https://user-images.githubusercontent.com/32810066/166094056-9a9506c7-65d0-4785-ab2c-df03b28f154d.png)<h4 align="center"> Foreground Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td>![bg](https://user-images.githubusercontent.com/32810066/166094260-69225a34-8b57-4746-bd8c-22f4f09f3a13.png)<h4 align="center"> Background Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td> ![sprite](https://user-images.githubusercontent.com/32810066/166094263-421faaf9-5f14-4ea0-8b82-408e708f7837.png)<h4 align="center"> Sprites Only </h4></td></tr><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![x_axis](https://user-images.githubusercontent.com/32810066/166094329-2b916aeb-73c4-46bf-b1f6-4a9f7ca5a829.png)<h4 align="center"> Sprite Flip X-Axis </h4></td><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![y_axis](https://user-images.githubusercontent.com/32810066/166094330-1fd8d1f9-e420-4acb-ad81-f33fcb4bb3d8.png)<h4 align="center"> Sprite Flip Y-Axis </h4></td></tr></tr> </table> |
 
-<summary><h3>Sei Senshi Amatelass</h3></summary>
+<h3>Sei Senshi Amatelass</h3>
 <p>Toggling dip switch 7 will enable invincibility. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development.
 <br><br>In the "Debug" section you will find a toggle for "Turbo". Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
 <br><br>This information is not listed in the mame driver and was discovered while adding support for Sei Senshi Amatelass.</p>
 
-<summary><h3>Kid no Hore Hore Daisakusen</h3></summary>
+<h3>Kid no Hore Hore Daisakusen</h3>
 <p>The following dip switches are set to default "Debug Mode" and cabinet "Upright". This will unlock the following debug features used for debugging during development.<br><br>For level selection, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection.<br><br>Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.<br><br>This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is above.</p>
 
 # Control Layout
