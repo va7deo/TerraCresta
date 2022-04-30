@@ -214,9 +214,10 @@ wire [3:0] vs_offset = status[31:28];
 
 wire test_flip_x = status [32];
 wire test_flip_y = status [33];
-wire fg_enable   = ~status[36];
-wire bg_enable   = ~status[37];
-wire spr_enable  = ~status[38];
+wire turbo = sw[0][7] | status [34];
+wire fg_enable   = ~(status[36] | key_fg_enable);
+wire bg_enable   = ~(status[37] | key_bg_enable);
+wire spr_enable  = ~(status[38] | key_spr_enable);
 
 assign VIDEO_ARX = (!aspect_ratio) ? (orientation  ? 8'd4 : 8'd3) : (aspect_ratio - 1'd1);
 assign VIDEO_ARY = (!aspect_ratio) ? (orientation  ? 8'd3 : 8'd4) : 12'd0;
@@ -370,7 +371,7 @@ wire       p2_right   = joy1[0] | key_p2_right;
 wire [1:0] p2_buttons = joy1[5:4] | {key_p2_b, key_p2_a};
 
 wire p1_start1     = joy0[6] | key_p1_start;
-wire p1_start2     = joy0[7] | key_p2_start | status [34];
+wire p1_start2     = joy0[7] | key_p2_start | turbo;
 wire p1_coin       = joy0[8] | key_p1_coin;
 wire b_pause       = joy0[9] | joy1[9] | key_pause;
 wire service       = joy0[10] | key_test | status [35];
@@ -383,6 +384,7 @@ wire p2_coin  =  joy1[8] | key_p2_coin;
 
 wire key_p1_start, key_p2_start, key_p1_coin, key_p2_coin;
 wire key_test, key_reset, key_service, key_pause;
+wire key_fg_enable, key_bg_enable, key_spr_enable;
 
 wire key_p1_up, key_p1_left, key_p1_down, key_p1_right, key_p1_a, key_p1_b;
 wire key_p2_up, key_p2_left, key_p2_down, key_p2_right, key_p2_a, key_p2_b;
@@ -395,28 +397,33 @@ always @(posedge clk_sys) begin
     old_state <= ps2_key[10];
     if(old_state ^ ps2_key[10]) begin
         casex(ps2_key[8:0])
-            'h016: key_p1_start <= pressed; // 1
-            'h01e: key_p2_start <= pressed; // 2
-            'h02E: key_p1_coin  <= pressed; // 5
-            'h036: key_p2_coin  <= pressed; // 6
-            'h006: key_test     <= pressed; // F2
-            'h004: key_reset    <= pressed; // F3
-            'h046: key_service  <= pressed; // 9
-            'h04D: key_pause    <= pressed; // p
+            'h016: key_p1_start   <= pressed; // 1
+            'h01e: key_p2_start   <= pressed; // 2
+            'h02E: key_p1_coin    <= pressed; // 5
+            'h036: key_p2_coin    <= pressed; // 6
+            'h006: key_test       <= pressed; // f2
+            'h004: key_reset      <= pressed; // f3
+            'h046: key_service    <= pressed; // 9
+            'h04D: key_pause      <= pressed; // p
 
-            'hX75: key_p1_up    <= pressed; // up
-            'hX72: key_p1_down  <= pressed; // down
-            'hX6b: key_p1_left  <= pressed; // left
-            'hX74: key_p1_right <= pressed; // right
-            'h014: key_p1_a     <= pressed; // lctrl
-            'h011: key_p1_b     <= pressed; // lalt
+            'hX75: key_p1_up      <= pressed; // up
+            'hX72: key_p1_down    <= pressed; // down
+            'hX6b: key_p1_left    <= pressed; // left
+            'hX74: key_p1_right   <= pressed; // right
+            'h014: key_p1_a       <= pressed; // lctrl
+            'h011: key_p1_b       <= pressed; // lalt
 
-            'h02d: key_p2_up    <= pressed; // r
-            'h02b: key_p2_down  <= pressed; // f
-            'h023: key_p2_left  <= pressed; // d
-            'h034: key_p2_right <= pressed; // g
-            'h01c: key_p2_a     <= pressed; // a
-            'h01b: key_p2_b     <= pressed; // s
+            'h02d: key_p2_up      <= pressed; // r
+            'h02b: key_p2_down    <= pressed; // f
+            'h023: key_p2_left    <= pressed; // d
+            'h034: key_p2_right   <= pressed; // g
+            'h01c: key_p2_a       <= pressed; // a
+            'h01b: key_p2_b       <= pressed; // s
+
+
+            'h083: key_fg_enable  <= pressed; // f7
+            'h00A: key_bg_enable  <= pressed; // f8
+            'h001: key_spr_enable <= pressed; // f9
         endcase
     end
 end
@@ -505,7 +512,7 @@ always @ (posedge clk_sys) begin
 end
 
 wire    reset;
-assign  reset = RESET | status[0] | buttons[1] | key_reset;
+assign  reset = RESET | status[0] | key_reset;
 
 //////////////////////////////////////////////////////////////////
 wire rotate_ccw = 1;
