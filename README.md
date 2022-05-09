@@ -50,7 +50,7 @@ Reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren O
 
 H-Sync      | V-Sync      | Source |
 ------------|-------------|--------|
-15.625kHz   | 59.323592Hz | [RT5x](https://github.com/va7deo/TerraCresta/blob/main/doc/Terra%20Cresta%2006827/tc_rt5x.jpg)/[DSLogic +](https://github.com/va7deo/TerraCresta/blob/main/doc/Terra%20Cresta%2006827/tc_csync.png) |
+15.625kHz   | 59.323592Hz | [DSLogic +](https://github.com/va7deo/TerraCresta/blob/main/doc/Terra%20Cresta%2006827/tc_csync.png) |
 
 ### Crystal Oscillators
 
@@ -79,7 +79,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 | Location | Chip | Use | PCB | ROM set |
 |----------|-----|------|-----|---------|
-15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <u>**Sei Senshi Amatelass / <br>Kid no Hore Hore Daisakusen**</u> | amatelass, amazon,horekid |
+15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <u>**Sei Senshi Amatelass / <br>Kid no Hore Hore Daisakusen**</u> | amatelass, amazon, horekid |
 
 # Debugging Features
 
@@ -88,7 +88,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 -   The three graphics layers are able to be toggled along with sprite flipping in the OSD under the Debug options or by pressing F7-F9 on the keyboard.
 
 <details>
-  <summary><h3>Layer Debugging Examples (Click Here)</summary>
+  <summary><b>Debugging Features (Click Here)</summary>
 
 |Layer Debug|
 |:--:|
@@ -102,7 +102,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 <br><br>This information is not listed in the mame driver and was discovered while adding support for Sei Senshi Amatelass.</p>
 
 <h3>Kid no Hore Hore Daisakusen</h3>
-<p>The following dip switches are set to default "Debug Mode" and cabinet "Upright". This will unlock the following debug features used for debugging during development.<br><br>For level selection, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection.<br><br>Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.<br><br>This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is above.</p>
+<p>The following dip switches are set to default "Debug Mode" and cabinet "Upright". This will unlock the following debug features used for debugging during development.<br><br>For level selection, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection.<br><br>Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.<br><br>This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is below.</p>
 
 # Control Layout
 
