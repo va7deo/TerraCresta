@@ -11,9 +11,9 @@ Currently in an beta state, this core is in active development with assistance f
 
 | Title | Status | Released |
 |------|---------|----------|
-[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | **Beta** | Y |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | **Beta** | Y |
-[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | **Beta** | Y |
+[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | Implemented | **Y** |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | W.I.P       | **Y** |
+[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | W.I.P       | **Y** |
 
 ## External Modules
 
@@ -38,7 +38,7 @@ Currently in an beta state, this core is in active development with assistance f
 - Reverse engineer Terra Cresta and provide schematics  
 - Protection IC **NB1412M2** implementation  
 
-# PCB Check List / FPGA Features
+# PCB Check List
 
 FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. 
 
@@ -50,7 +50,7 @@ Reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren O
 
 H-Sync      | V-Sync      | Source |
 ------------|-------------|--------|
-15.625kHz   | 59.323592Hz | [RT5x](https://github.com/va7deo/TerraCresta/blob/main/doc/Logic%20Analyzer/tc_rt5x.jpg)/[DSLogic +](https://github.com/va7deo/TerraCresta/blob/main/doc/Logic%20Analyzer/tc_csync.png) |
+15.625kHz   | 59.323592Hz | [RT5x](https://github.com/va7deo/TerraCresta/blob/main/doc/Terra%20Cresta%2006827/tc_rt5x.jpg)/[DSLogic +](https://github.com/va7deo/TerraCresta/blob/main/doc/Terra%20Cresta%2006827/tc_csync.png) |
 
 ### Crystal Oscillators
 
@@ -79,7 +79,7 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 | Location | Chip | Use | PCB | ROM set |
 |----------|-----|------|-----|---------|
-15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <br> <u>**Sei Senshi Amatelass**</u> <br><br> <u>**Soldier Girl Amazon (Nichibutsu USA)**</u> <br><br> <u>**Kid no Hore Hore Daisakusen**</u> | <br>amatelass<br><br>amazon<br><br>horekid |
+15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <u>**Sei Senshi Amatelass / <br>Kid no Hore Hore Daisakusen**</u> | amatelass, amazon,horekid |
 
 # Debugging Features
 
@@ -87,9 +87,14 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 -   The three graphics layers are able to be toggled along with sprite flipping in the OSD under the Debug options or by pressing F7-F9 on the keyboard.
 
+<details>
+  <summary><h3>Layer Debugging Examples (Click Here)</summary>
+
 |Layer Debug|
 |:--:|
 |<table> <tr><th>Disabled</th><th>Enabled</th></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png )<h4 align="center"> All Layers </h4></td><td> ![fg](https://user-images.githubusercontent.com/32810066/166094056-9a9506c7-65d0-4785-ab2c-df03b28f154d.png)<h4 align="center"> Foreground Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td>![bg](https://user-images.githubusercontent.com/32810066/166094260-69225a34-8b57-4746-bd8c-22f4f09f3a13.png)<h4 align="center"> Background Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td> ![sprite](https://user-images.githubusercontent.com/32810066/166094263-421faaf9-5f14-4ea0-8b82-408e708f7837.png)<h4 align="center"> Sprites Only </h4></td></tr><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![x_axis](https://user-images.githubusercontent.com/32810066/166094329-2b916aeb-73c4-46bf-b1f6-4a9f7ca5a829.png)<h4 align="center"> Sprite Flip X-Axis </h4></td><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![y_axis](https://user-images.githubusercontent.com/32810066/166094330-1fd8d1f9-e420-4acb-ad81-f33fcb4bb3d8.png)<h4 align="center"> Sprite Flip Y-Axis </h4></td></tr></tr> </table> |
+
+</details>
 
 <h3>Sei Senshi Amatelass</h3>
 <p>Toggling dip switch 7 will enable invincibility. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development.
