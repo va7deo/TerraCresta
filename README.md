@@ -3,7 +3,8 @@
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O).  Terra Cresta YM2203 OPN Type PCB donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich). 
 
-Currently in an beta state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
+
+The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware. Currently in an beta state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
 
 ![Logo](https://user-images.githubusercontent.com/32810066/160257413-889da2d8-f968-4bd1-9adc-fb22552f0455.png)
 
@@ -40,11 +41,7 @@ Currently in an beta state, this core is in active development with assistance f
 
 # PCB Check List
 
-FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. 
-
-The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware.
-
-Reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O) and schematics will be included in the repository.
+FPGA implementation is based on Terra Cresta and will be verified against the YM2203 PSG Type PCB with a YM3526 swap. Reverse engineering of an authentic Terra Cresta PCB will be done by [**Darren Olafson**](https://twitter.com/Darren__O); schematics will be included in the repository.
 
 ### Clock Information
 
@@ -83,41 +80,69 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 # Debugging Features
 
-### Layer Toggles / Sprite Flip
+### GFX Layer Toggle
 
--   The three graphics layers are able to be toggled along with sprite flipping in the OSD under the Debug options or by pressing F7-F9 on the keyboard.
+-  The three graphics layers can be toggled in the OSD under the Debug options or by pressing<br> F7-F9 on the keyboard.
 
-<details>
-  <summary><b>Debugging Features (Click Here)</summary>
+<br>
 
 |Layer Debug|
 |:--:|
-|<table> <tr><th>Disabled</th><th>Enabled</th></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png )<h4 align="center"> All Layers </h4></td><td> ![fg](https://user-images.githubusercontent.com/32810066/166094056-9a9506c7-65d0-4785-ab2c-df03b28f154d.png)<h4 align="center"> Foreground Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td>![bg](https://user-images.githubusercontent.com/32810066/166094260-69225a34-8b57-4746-bd8c-22f4f09f3a13.png)<h4 align="center"> Background Tile Only </h4></td></tr><tr><td>![nm_1](https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png)<h4 align="center"> All Layers </h4></td><td> ![sprite](https://user-images.githubusercontent.com/32810066/166094263-421faaf9-5f14-4ea0-8b82-408e708f7837.png)<h4 align="center"> Sprites Only </h4></td></tr><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![x_axis](https://user-images.githubusercontent.com/32810066/166094329-2b916aeb-73c4-46bf-b1f6-4a9f7ca5a829.png)<h4 align="center"> Sprite Flip X-Axis </h4></td><tr><td>![nm](https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png)<h4 align="center"> All Layers </h4></td><td> ![y_axis](https://user-images.githubusercontent.com/32810066/166094330-1fd8d1f9-e420-4acb-ad81-f33fcb4bb3d8.png)<h4 align="center"> Sprite Flip Y-Axis </h4></td></tr></tr> </table> |
+|<table> <tr> <th>All Layers</th><th>Foreground</th><th>Background</th><th>Sprites</th></tr><tr><td><p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094033-c585ac95-f2fc-4505-8c53-28bf46848ff3.png"></p></td><td> <p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094056-9a9506c7-65d0-4785-ab2c-df03b28f154d.png"></p></td><td> <p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094260-69225a34-8b57-4746-bd8c-22f4f09f3a13.png"></td><td> <p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094263-421faaf9-5f14-4ea0-8b82-408e708f7837.png"></td></tr>
+ </table>
 
-</details>
+### Sprite Flip on Axis Toggle
+
+-  To enable sprite flip, in the OSD under the Debug options enable<br> the toggle.
+
+<br>
+
+|Sprite Flip|
+|:--:|
+|<table> <tr> <th>All Layers</th><th> Sprite Flip X-Axis</th><th>Sprite Flip Y-Axis</th></tr><tr><td><p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png"></p></td><td> <p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094329-2b916aeb-73c4-46bf-b1f6-4a9f7ca5a829.png"></p></td><td> <p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094330-1fd8d1f9-e420-4acb-ad81-f33fcb4bb3d8.png"></td>
+ </table>
 
 <h3>Sei Senshi Amatelass</h3>
-<p>Toggling dip switch 7 will enable invincibility. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development.
-<br><br>In the "Debug" section you will find a toggle for "Turbo". Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
-<br><br>This information is not listed in the mame driver and was discovered while adding support for Sei Senshi Amatelass.</p>
+
+<br>
+
+> - Toggling dip switch 7 will enable **invincibility**. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development.
+> 
+> - In the **Debug** of the **OSD section** you will find a toggle for **Turbo**. Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
 
 <h3>Kid no Hore Hore Daisakusen</h3>
-<p>The following dip switches are set to default "Debug Mode" and cabinet "Upright". This will unlock the following debug features used for debugging during development.<br><br>For level selection, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection.<br><br>Invincibility and infinite time are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. If you wish to do this and enable the debug level select, set your level prior to enabling these debug features.<br><br>This information is taken from the mame driver. To access these features easily, use the keyboard handler. Mapping information is below.</p>
+
+<br>
+
+> - The following dip switches are set to default **Debug Mode** and cabinet **Upright**. With these enabled, you will be able to access the following debug features.
+> 
+> - For **level selection**, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection.
+> 
+> - **Invincibility** and **infinite time** are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. 
+>
+> - If you wish to enable the debug level select, set your level prior to enabling these debug features.
+
+<br>
 
 # Control Layout
 
-### 2L6B Control Panel Layout (Common Layout)
+<h3 align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2L6B Control Panel Layout (Common Layout)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
 
-- Upright cabinet shares a 1L2B control panel layout (**players are required to switch**).
+<p align="left"><img width="730" height="144" src="https://user-images.githubusercontent.com/32810066/165549007-14edc2d0-3afa-4017-93ca-5b9c7dec5f1a.png"></p> 
 
-- Default cabinet style is set to cocktail for Terra Cresta and Sei Senshi Amatelass. This enables multiple controller inputs.
+<h3 align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1L2B Control Panel Layout (Nichibutsu Layout)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
 
-![controls](https://user-images.githubusercontent.com/32810066/165549007-14edc2d0-3afa-4017-93ca-5b9c7dec5f1a.png)
+<p align="left"><img width="730" height="144" src="https://user-images.githubusercontent.com/32810066/167632204-6e6e8ade-189d-46c8-9208-88c3d00b77a3.png"></p>
 
-| Cabinet Style | Game | Joystick | Push Button | Start Button | Shared Controls | Dip Default |
-|-|-|-|-|-|-|-|
-| Cocktail / Upright | Terra Cresta / Sei Senshi Amatelass | 8-way | 2 | 2 | Upright Only | **Cocktail** |
-| Cocktail / Upright | Kid no Hore Hore Daisakusen | 4-way | 2 | 2 | No | **Upright** |
+Game | Joystick | Service Menu | Shared Controls | Dip Default |
+--- | :---: | :---: | :---: | :---: |
+Terra Cresta| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/167633259-f29bc414-06e6-4ea2-aaa0-e31a8b60f4fd.png"></p> | Upright | **Table**
+Sei Senshi Amatelass| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/167633279-3573d97c-49c0-42b0-8fba-6791ca48d1d7.png"></p> | Upright | **Table**
+Kid no Hore Hore Daisakusen| 4-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/167633298-22669829-acff-450d-9df0-ca8c0b0600b2.png"></p> | No | **Upright**
+<br>
+
+- Upright cabinet shares a 1L2B control panel layout. Players are required to switch controller. The deefault cabinet style is set to table for Terra Cresta and Sei Senshi Amatelass. This enables multiple player controllers.
+<br>
 
 ### Keyboard Handler
 
