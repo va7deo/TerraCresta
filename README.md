@@ -110,6 +110,8 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 > 
 > - In the **Debug** of the **OSD section** you will find a toggle for **Turbo**. Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
 
+<br>
+
 <h3>Kid no Hore Hore Daisakusen</h3>
 
 <br>
