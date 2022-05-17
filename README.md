@@ -54,7 +54,7 @@ H-Sync      | V-Sync      | Source |
 Location | Freq (MHz) | Use          |
 ---------|------------|--------------|
 2        | 16.000     | M68000       |
-X1       | 22.000     | Z80 / YM3526 |
+X1       | 12.000     | Z80 / YM3526 |
 
 **Pixel clock:** 6.00 MHz
 
@@ -128,14 +128,6 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 
 # Control Layout
 
-<h3 align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2L6B Control Panel Layout (Common Layout)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
-
-<p align="left"><img width="730" height="144" src="https://user-images.githubusercontent.com/32810066/165549007-14edc2d0-3afa-4017-93ca-5b9c7dec5f1a.png"></p> 
-
-<h3 align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1L2B Control Panel Layout (Nichibutsu Layout)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
-
-<p align="left"><img width="730" height="144" src="https://user-images.githubusercontent.com/32810066/167632204-6e6e8ade-189d-46c8-9208-88c3d00b77a3.png"></p>
-
 Game | Joystick | Service Menu | Shared Controls | Dip Default |
 --- | :---: | :---: | :---: | :---: |
 Terra Cresta| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/167633259-f29bc414-06e6-4ea2-aaa0-e31a8b60f4fd.png"></p> | Upright | **Table**
@@ -144,7 +136,7 @@ Kid no Hore Hore Daisakusen| 4-Way | <p align="center"><img width="120" height="
 <br>
 
 - Upright cabinet shares a 1L2B control panel layout. Players are required to switch controller. The deefault cabinet style is set to table for Terra Cresta and Sei Senshi Amatelass. This enables multiple player controllers.
-<br>
+
 
 ### Keyboard Handler
 
