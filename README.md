@@ -6,15 +6,15 @@ FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware f
 
 The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware. Currently in an beta state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
 
-![Logo](https://user-images.githubusercontent.com/32810066/160257413-889da2d8-f968-4bd1-9adc-fb22552f0455.png)
+![Nichibutsu TC](https://user-images.githubusercontent.com/32810066/172844714-a23fce6b-2eab-4c47-ae46-e0c48f447c84.png)
 
 ## Supported Games
 
 | Title | Status | Released |
 |------|---------|----------|
 [**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | Implemented | **Y** |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | W.I.P       | **Y** |
-[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | W.I.P       | **Y** |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Implemented | **Y** |
+[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Implemented | **Y** |
 
 ## External Modules
 
@@ -34,10 +34,11 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 - ~~Map Test / Service to keyboard handler~~  
 - ~~Service Menu (push button service menu) in Kid no Hore Hore Daisakusen~~  
 - ~~Additional debugging features (layer toggle)~~  
+- ~~Protection IC **NB1412M2** implementation~~  
+- Input swap on amatelass, amazon, horekidb
 - Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)  
 - Screen Flip implementation  
 - Reverse engineer Terra Cresta and provide schematics  
-- Protection IC **NB1412M2** implementation  
 
 # PCB Check List
 
@@ -68,17 +69,41 @@ X1       | 12.000     | Z80 / YM3526 |
 
 Location | Chip | Use |
 ---------|------|-----|
-I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Main CPU |
-17 D (Bottom Board) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80) | Sound CPU |
-20 D (Bottom Board) | [**Yamaha YM3526**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL) | OPL |
+I C (Top Board)     | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorola_68000) | Main CPU  |
+17 D (Bottom Board) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80)           | Sound CPU |
+20 D (Bottom Board) | [**Yamaha YM3526**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL)      | OPL       |
 
 ### Nichibutsu Custom Components
 
 | Location | Chip | Use | PCB | ROM set |
 |----------|-----|------|-----|---------|
-15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <u>**Sei Senshi Amatelass / <br>Kid no Hore Hore Daisakusen**</u> | amatelass, amazon, horekid |
+15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <u>**Sei Senshi Amatelass <br><br> Kid no Hore Hore Daisakusen**</u> | amatelass, amazon, amazont <br><br> horekid |
 
 # Debugging Features
+
+### Sei Senshi Amatelass
+
+<br>
+
+> - Toggling dip switch 7 on bank 1 will enable **invincibility**. When this is enabled, you can overclock the games framerate by holding the 2P Start Bttn. This feature was used for debugging during development.
+> 
+> - In the **Debug** of the **OSD section** you will find a toggle for **Turbo**. Enabling this removes the requirement to press and hold the 2P Start Bttn to enable this feature.
+
+<br>
+
+### Kid no Hore Hore Daisakusen
+
+<br>
+
+> - The following dip switches are set to default **Debug Mode** and cabinet **Upright**. With these enabled, you will be able to access the following debug features.
+> 
+> - For **level selection**, insert a coin and press P2 Bttn 1 and 2. In the bottom right corner, 00 will be displayed. Pressing P2 Bttn 1 and 2 and player 1 Bttn 1 increases the level. Pressing P2 Bttn 1 and 2 and P1 Bttn 2 decreases the level. Press P1 start after choosing your level selection.
+> 
+> - **Invincibility** and **infinite time** are set by inserting a coin and pressing P2 Bttn 1, P2 Bttn 2 and P1 Start Bttn.
+>
+> - If you wish to enable the debug level select, set your level prior to enabling these debug features.
+
+<br>
 
 ### GFX Layer Toggle
 
@@ -102,45 +127,23 @@ I C (Top Board) | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Motorol
 |<table> <tr> <th>All Layers</th><th> Sprite Flip X-Axis</th><th>Sprite Flip Y-Axis</th></tr><tr><td><p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094328-947de08c-986f-48de-a35a-a6eeb40bbb1c.png"></p></td><td> <p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094329-2b916aeb-73c4-46bf-b1f6-4a9f7ca5a829.png"></p></td><td> <p align="center"><img width="144" height="192" src="https://user-images.githubusercontent.com/32810066/166094330-1fd8d1f9-e420-4acb-ad81-f33fcb4bb3d8.png"></td>
  </table>
 
-<h3>Sei Senshi Amatelass</h3>
-
-<br>
-
-> - Toggling dip switch 7 will enable **invincibility**. When this is enabled, you can overclock the games framerate by holding the 2p Start Button. This feature was used for debugging during development.
-> 
-> - In the **Debug** of the **OSD section** you will find a toggle for **Turbo**. Enabling this removes the requirement to press and hold the 2p Start Button to enable this feature. 
-
-<br>
-
-<h3>Kid no Hore Hore Daisakusen</h3>
-
-<br>
-
-> - The following dip switches are set to default **Debug Mode** and cabinet **Upright**. With these enabled, you will be able to access the following debug features.
-> 
-> - For **level selection**, insert a coin and press player 2 button 1 and 2. In the bottom right corner, 00 will be displayed. Pressing player 2 button 1 and 2 and player 1 button 1 increases the level. Pressing player 2 button 1 and 2 and player 1 button 2  decreases the level. Press player 1 start after choosing your level selection.
-> 
-> - **Invincibility** and **infinite time** are set by inserting a coin and pressing player 2 button 1 and 2 and player 1 start buttons. 
->
-> - If you wish to enable the debug level select, set your level prior to enabling these debug features.
-
-<br>
-
 # Control Layout
 
 Game | Joystick | Service Menu | Shared Controls | Dip Default |
 --- | :---: | :---: | :---: | :---: |
-Terra Cresta| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/167633259-f29bc414-06e6-4ea2-aaa0-e31a8b60f4fd.png"></p> | Upright | **Table**
-Sei Senshi Amatelass| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/167633279-3573d97c-49c0-42b0-8fba-6791ca48d1d7.png"></p> | Upright | **Table**
-Kid no Hore Hore Daisakusen| 4-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/167633298-22669829-acff-450d-9df0-ca8c0b0600b2.png"></p> | No | **Upright**
+Terra Cresta| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/172837828-56bb974b-867d-4308-be11-ab7a69c711e7.png"></p> | Upright | **Table**
+Sei Senshi Amatelass| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/172837832-cb00f44c-3b44-410a-a5c5-807688508c3f.png"></p> | Upright | **Table**
+Kid no Hore Hore Daisakusen| 4-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/172837833-3a7b3d2e-64d2-4860-9e22-3be11b4ecfe9.png"></p> | No | **Upright**
+
 <br>
 
 - Upright cabinet shares a 1L2B control panel layout. Players are required to switch controller. The deefault cabinet style is set to table for Terra Cresta and Sei Senshi Amatelass. This enables multiple player controllers.
 
-
 ### Keyboard Handler
 
-- Keyboard inputs mapped to mame defaults for all functions.
+- Keyboard inputs mapped to mame defaults for all functions with additional keys for layer toggles.
+
+<br>
 
 |Services|Coin/Start|
 |--|--|
@@ -148,7 +151,7 @@ Kid no Hore Hore Daisakusen| 4-Way | <p align="center"><img width="120" height="
 
 |Player 1|Player 2|
 |--|--|
-|<table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P1 Up</td><td>Up</td></tr><tr><td>P1 Down</td><td>Down</td></tr><tr><td>P1 Left</td><td>Left</td></tr><tr><td>P1 Right</td><td>Right</td></tr><tr><td>P1 Bttn 1</td><td>L-CTRL</td></tr><tr><td>P1 Bttn 2</td><td>L-ALT</td></tr> </table> | <table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P2 Up</td><td>R</td></tr><tr><td>P2 Down</td><td>F</td></tr><tr><td>P2 Left</td><td>D</td></tr><tr><td>P2 Right</td><td>G</td></tr><tr><td>P2 Bttn 1</td><td>A</td></tr><tr><td>P2 Bttn 2</td><td>S</td></tr> </table>|
+|<table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P1 Up</td><td>Up</td></tr><tr><td>P1 Down</td><td>Down</td></tr><tr><td>P1 Left</td><td>Left</td></tr><tr><td>P1 Right</td><td>Right</td></tr><tr><td>P1 Bttn 1</td><td>L-Ctrl</td></tr><tr><td>P1 Bttn 2</td><td>L-Alt</td></tr> </table> | <table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>P2 Up</td><td>R</td></tr><tr><td>P2 Down</td><td>F</td></tr><tr><td>P2 Left</td><td>D</td></tr><tr><td>P2 Right</td><td>G</td></tr><tr><td>P2 Bttn 1</td><td>A</td></tr><tr><td>P2 Bttn 2</td><td>S</td></tr> </table>|
 
 |Debug|
 |--|
