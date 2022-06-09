@@ -10,11 +10,11 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 
 ## Supported Games
 
-| Title | Status | Released |
-|------|---------|----------|
-[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | Implemented | **Y** |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Implemented | **Y** |
-[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Implemented | **Y** |
+| Title | Status | Released | Protection | Unprotected Sets |
+|------|---------|----------|------------|------------------|
+[**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | Implemented | **Y** | None     | N/A                    |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Implemented | **Y** | NB1412M2 | **amatelass, amazon, amazont**  |
+[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Implemented | **Y** | NB1412M2 | **horekid**                     |
 
 ## External Modules
 
@@ -35,7 +35,7 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 - ~~Service Menu (push button service menu) in Kid no Hore Hore Daisakusen~~  
 - ~~Additional debugging features (layer toggle)~~  
 - ~~Protection IC **NB1412M2** implementation~~  
-- Input swap on amatelass, amazon, horekidb
+- ~~Input swap on amatelass, amazon, horekidb~~  
 - Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)  
 - Screen Flip implementation  
 - Reverse engineer Terra Cresta and provide schematics  
