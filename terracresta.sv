@@ -244,7 +244,7 @@ localparam CONF_STR = {
     "-;",
     "P3,PCB & Debug Settings;",
     "P3-;",
-    "P3o2,Turbo (Amatelass Sets),Off,On;",
+    "P3o2,Turbo (Amazon Sets),Off,On;",
     "P3o3,Service Menu,Off,On;",
     "P3-;",
     "P3o5,Foreground Layer,On,Off;",
@@ -869,7 +869,7 @@ always @ (posedge clk_sys ) begin
         copy_sprite_state <= 3; 
     end else if ( copy_sprite_state == 3 ) begin        
        // address 0 result
-        sprite_y_pos <= 240 - sprite_shared_ram_dout;
+        sprite_y_pos <= 239 - sprite_shared_ram_dout;
 
         sprite_shared_addr <= sprite_shared_addr + 1 ;
         copy_sprite_state <= 4; 
@@ -903,7 +903,7 @@ always @ (posedge clk_sys ) begin
 
         copy_sprite_state <= 6; 
     end else if ( copy_sprite_state == 6 ) begin        
-        sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - 8'h80 ;
+        sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - 8'h7e ;
 
         copy_sprite_state <= 7; 
     end else if ( copy_sprite_state == 7 ) begin                
