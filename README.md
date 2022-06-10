@@ -3,7 +3,6 @@
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O).  Terra Cresta YM2203 OPN Type PCB donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich). 
 
-
 The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware. Currently in an beta state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
 
 ![Nichibutsu TC](https://user-images.githubusercontent.com/32810066/172844714-a23fce6b-2eab-4c47-ae46-e0c48f447c84.png)
@@ -11,7 +10,7 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 ## Supported Games
 
 | Title | Status | Released | Protection | Protected Sets |
-|------|---------|----------|------------|------------------|
+|------|---------|----------|------------|----------------|
 [**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | Implemented | **Y** | None     | N/A                    |
 [**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Implemented | **Y** | NB1412M2 | **amatelass, amazon**  |
 [**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Implemented | **Y** | NB1412M2 | **horekid**            |
@@ -36,7 +35,7 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 - ~~Additional debugging features (layer toggle)~~  
 - ~~Protection IC **NB1412M2** implementation~~  
 - ~~Input swap on amatelass, amazon, horekidb~~  
-- Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)  
+- ~~Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)~~  
 - Screen Flip implementation  
 - Reverse engineer Terra Cresta and provide schematics  
 
@@ -79,29 +78,12 @@ I C (Top Board)     | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Mot
 |----------|-----|------|-----|---------|
 15 G (Top Board) | [**NB1412M42**](https://raw.githubusercontent.com/va7deo/TerraCresta/main/doc/Sei%20Senshi%20Amatelass/Sei%20Senshi%20Amatelass%20Front.jpg) | Protection IC | <u>**Sei Senshi Amatelass <br><br> Kid no Hore Hore Daisakusen**</u> | amatelass, amazon, amazont <br><br> horekid |
 
-# Debugging Features
+# PCB Features
 
-### Sei Senshi Amatelass
-
-<br>
-
-> - Toggling dip switch 7 on bank 1 will enable **invincibility**. When this is enabled, you can overclock the games framerate by holding the 2P Start Bttn. This feature was used for debugging during development.
-> 
-> - In the **Debug** of the **OSD section** you will find a toggle for **Turbo**. Enabling this removes the requirement to press and hold the 2P Start Bttn to enable this feature.
-
-<br>
-
-### Kid no Hore Hore Daisakusen
-
-<br>
-
-> - The following dip switches are set to default **Debug Mode** and cabinet **Upright**. With these enabled, you will be able to access the following debug features.
-> 
-> - For **level selection**, insert a coin and press P2 Bttn 1 and 2. In the bottom right corner, 00 will be displayed. Pressing P2 Bttn 1 and 2 and player 1 Bttn 1 increases the level. Pressing P2 Bttn 1 and 2 and P1 Bttn 2 decreases the level. Press P1 start after choosing your level selection.
-> 
-> - **Invincibility** and **infinite time** are set by inserting a coin and pressing P2 Bttn 1, P2 Bttn 2 and P1 Start Bttn.
->
-> - If you wish to enable the debug level select, set your level prior to enabling these debug features.
+|<p align="center">Game Debugging|
+|:---:|
+|<table><tr><th>Sei Senshi Amatelass</th><th>Debugging Features [amatelass, amazon, amazont]</th></tr><tr><td><img src="https://user-images.githubusercontent.com/32810066/173086562-300b4bfa-00fd-4170-a44a-5b5f661f3165.png"></img></td><td><p align="left">Dip switch 7 on bank 1 to on enables **invincibility**. When enabled, overclocking the <br>framerate is possible by holding the 2P Start Bttn or enabling **turbo** in the OSD.</p></td></table>
+|<table><tr><th>Kid no Hore<br>Hore Daisakusen</th><th>Debugging Features [horekid, horekidb1, horekidb2]</th></tr><tr><td><img src="https://user-images.githubusercontent.com/32810066/173086616-6416caad-40b0-43fd-9405-39276c3f06bc.png"></img></td><td><p align="left">**Debug Mode** and cabinet **Upright** dip switches are set to default. When enabled,<br> you will be able to access the following debug features:<br><br>**Level Selection**: insert a coin and press P2 Bttn 1 and 2. In the bottom right corner,<br>00 will be displayed. Pressing P2 Bttn 1 and 2 and P1 1 Bttn 1 increases the level. <br>Pressing P2 Bttn 1 and 2 and P1 Bttn 2 decreases the level. Press P1 start after <br>choosing your level selection.<br><br>**Invincibility** and **Infinite Time** are set by inserting a coin and pressing P2 Bttn 1, <br>P2 Bttn 2 and P1 Start Bttn.<br><br>To enable the debug level select, set your level prior to enabling these debug features.</p></td></table>
 
 <br>
 
@@ -131,9 +113,9 @@ I C (Top Board)     | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Mot
 
 Game | Joystick | Service Menu | Shared Controls | Dip Default |
 --- | :---: | :---: | :---: | :---: |
-Terra Cresta| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/172837828-56bb974b-867d-4308-be11-ab7a69c711e7.png"></p> | Upright | **Table**
-Sei Senshi Amatelass| 8-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/172837832-cb00f44c-3b44-410a-a5c5-807688508c3f.png"></p> | Upright | **Table**
-Kid no Hore Hore Daisakusen| 4-Way | <p align="center"><img width="120" height="160" src="https://user-images.githubusercontent.com/32810066/172837833-3a7b3d2e-64d2-4860-9e22-3be11b4ecfe9.png"></p> | No | **Upright**
+Terra Cresta| 8-Way | <img src="https://user-images.githubusercontent.com/32810066/172837828-56bb974b-867d-4308-be11-ab7a69c711e7.png"></p> | Upright | **Table** |
+Sei Senshi Amatelass| 8-Way | <img src="https://user-images.githubusercontent.com/32810066/172837832-cb00f44c-3b44-410a-a5c5-807688508c3f.png"></p> | Upright | **Table** |
+Kid no Hore Hore Daisakusen| 4-Way | <img src="https://user-images.githubusercontent.com/32810066/172837833-3a7b3d2e-64d2-4860-9e22-3be11b4ecfe9.png"></p> | No | **Upright** |
 
 <br>
 
