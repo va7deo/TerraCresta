@@ -20,6 +20,7 @@ set_global_assignment -name QIP_FILE sys/sys.qip
 
 set_global_assignment -name SYSTEMVERILOG_FILE terracresta.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/video_timing.sv
+set_global_assignment -name VHDL_FILE rtl/mem/math.vhd
 set_global_assignment -name VERILOG_FILE rtl/chip_select.v
 set_global_assignment -name VERILOG_FILE rtl/pause.v
 set_global_assignment -name VHDL_FILE rtl/mem/dual_port_ram.vhd
