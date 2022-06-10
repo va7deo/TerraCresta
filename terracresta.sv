@@ -200,11 +200,11 @@ assign LED_POWER = 0;
 assign BUTTONS = 0;
 
 // Status Bit Map:
-//              Upper                          Lower
-// 0         1         2         3          4         5         6
+//              Upper                          Lower                
+// 0         1         2         3          4         5         6   
 // 01234567890123456789012345678901 23456789012345678901234567890123
 // 0123456789ABCDEFGHIJKLMNOPQRSTUV 0123456789ABCDEFGHIJKLMNOPQRSTUV
-
+// X X XXX XXX          XXXXXXXXXXX XXXXXXX                         
 
 wire [1:0] aspect_ratio = status[9:8];
 wire orientation = ~status[10];
@@ -212,8 +212,8 @@ wire [2:0] scan_lines = status[6:4];
 wire [3:0] hs_offset = status[27:24];
 wire [3:0] vs_offset = status[31:28];
 
-wire test_flip_x = status [32];
-wire test_flip_y = status [33];
+wire test_flip_x = status[32];
+wire test_flip_y = status[33];
 wire fg_enable   = ~(status[36] | key_fg_enable);
 wire bg_enable   = ~(status[37] | key_bg_enable);
 wire spr_enable  = ~(status[38] | key_spr_enable);
@@ -235,12 +235,15 @@ localparam CONF_STR = {
     "P1OL,Video Signal,RGBS/YPbPr,Y/C;",
     "P1OOR,H-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
-    "DIP;",
-//    "-;",
-//    "P2,Pause options;",
-//    "P2OP,Pause when OSD is open,On,Off;",
-//    "P2OQ,Dim video after 10s,On,Off;",
-    "P3,Debug;",
+    "P2-;",
+    "P2,Pause Options;",
+    "P2OP,Pause when OSD is open,Off,On;",
+    "P2OQ,Dim video after 10s,Off,On;",
+    "-;",
+    "P3,PCB Debug;",
+    "P3-;",
+    "P3o2,Turbo (Amatelass Sets),Off,On;",
+    "P3o3,Service Menu,Off,On;",
     "P3-;",
     "P3o5,Foreground Layer,On,Off;",
     "P3o4,Background Layer,On,Off;",
@@ -248,9 +251,7 @@ localparam CONF_STR = {
     "P3-;",
     "P3o0,Invert Sprite X-Axis,Off,On;",
     "P3o1,Invert Sprite Y-Axis,Off,On;",
-    "P3-;",
-    "P3o2,Turbo,Off,On;",
-    "P3o3,Service Menu,Off,On;",
+    "DIP;",
     "-;",
     "R0,Reset;",
     "J1,Button 1,Button 2,Button 3,Start,Coin,Pause;",
@@ -317,7 +318,7 @@ wire [21:0] gamma_bus;
 
 //<buttons names="Fire,Jump,Start,Coin,Pause" default="A,B,R,L,Start" />
 reg [15:0] p1 ;
-reg [15:0] p2;
+reg [15:0] p2 ;
 reg [15:0] dsw1 ;
 reg [15:0] sys ;
 
@@ -342,7 +343,7 @@ always @ (posedge clk_sys) begin
         sys[8] <= ~(p1_start1 | p2_start1) ; // coin [5]
         sys[9] <= ~(p1_start2 | p2_start2) ;
     end else begin
-        // amazon, amazont and horekidb2
+        // amatelas, amazon, amazont and horekidb2
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START1 )
         sys[8] <= ~(p1_start2 | p2_start2) ; // coin [5]
@@ -377,14 +378,14 @@ wire       p2_right   = joy1[0] | key_p2_right;
 wire [1:0] p2_buttons = joy1[5:4] | {key_p2_b, key_p2_a};
 
 wire p1_start1     = joy0[6] | key_p1_start;
-wire p1_start2     = joy0[7] | key_p2_start | status [34];
+wire p1_start2     = joy0[7] | key_p2_start | status[34];
 wire p1_coin       = joy0[8] | key_p1_coin;
 wire b_pause       = joy0[9] | joy1[9] | key_pause;
-wire service       = joy0[10] | key_test | status [35];
+wire service       = joy0[10] | key_test | status[35];
 
 wire p2_start1 = joy1[6] | key_p1_start;
 wire p2_start2 = joy1[7] | key_p2_start;
-wire p2_coin  =  joy1[8] | key_p2_coin;
+wire p2_coin   = joy1[8] | key_p2_coin;
 
 // Keyboard handler
 
@@ -442,7 +443,7 @@ pause #(4,4,4,48) pause (
     .reset(reset),
     .user_button(b_pause),
     .pause_request(hs_pause),
-    .options(~status[26:25]),
+    .options(status[23:22]),
     .pause_cpu(pause_cpu),
     .OSD_STATUS(0),
     .r(rgb[11:8]),
