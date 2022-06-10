@@ -445,10 +445,11 @@ pause #(4,4,4,48) pause (
     .pause_request(hs_pause),
     .options(status[23:22]),
     .pause_cpu(pause_cpu),
-    .OSD_STATUS(0),
+    .dim_video(dim_video),
+    .OSD_STATUS(OSD_STATUS),
     .r(rgb[11:8]),
     .g(rgb[7:4]),
-    .b(rgb[3:0]),
+    .b(rgb[3:0])
 );
 
 
