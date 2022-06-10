@@ -239,8 +239,8 @@ localparam CONF_STR = {
     "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P2-;",
     "P2,Pause Options;",
-    "P2OP,Pause when OSD is open,Off,On;",
-    "P2OQ,Dim video after 10s,Off,On;",
+    "P2OM,Pause when OSD is open,Off,On;",
+    "P2ON,Dim video after 10s,Off,On;",
     "-;",
     "P3,PCB & Debug Settings;",
     "P3-;",
@@ -441,7 +441,9 @@ wire    pause_cpu;
 wire    hs_pause;
 
 
-pause #(4,4,4,48) pause (
+// 8 bits per colour, 72MHz sys clk
+pause #(8,8,8,72) pause 
+(
     .clk_sys(clk_sys),
     .reset(reset),
     .user_button(b_pause),
@@ -450,9 +452,9 @@ pause #(4,4,4,48) pause (
     .pause_cpu(pause_cpu),
     .dim_video(dim_video),
     .OSD_STATUS(OSD_STATUS),
-    .r(rgb[11:8]),
-    .g(rgb[7:4]),
-    .b(rgb[3:0]),
+    .r(rgb[23:16]),
+    .g(rgb[15:8]),
+    .b(rgb[7:0]),
     .rgb_out(rgb_pause_out)
 );
 
