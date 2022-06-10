@@ -1,7 +1,7 @@
 <misterromdescription>
-    <name>Soldier Girl Amazon (Tecfri license)</name>
+    <name>Soldier Girl Amazon</name>
     <mameversion>0240</mameversion>
-    <setname>amazont</setname>
+    <setname>amazon</setname>
     <year>1986</year>
     <manufacturer>Nichibutsu</manufacturer>
     <category>Shoot 'em up</category>
@@ -22,18 +22,18 @@
         <dip name="Sprite Test" bits="15" ids="On,Off"/>
     </switches>
 
-    <buttons names="Sword Beam,Stop Bullet,Start (1p),Start (2p),Coin,Pause,Service" default="A,B,X,Y,R,L,Start"/>
+    <buttons names="Sword Beam,Stop Bullet,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
 
-    <rom index="0" zip="amazont.zip|amazon.zip" md5="None">
+    <rom index="0" zip="amazon.zip" md5="None">
 
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="7.4b" crc="a74cdcea" map="01"/>
-            <part name="5.4d" crc="ae39432f" map="10"/>
+            <part name="9.4b" crc="e1b7a989" map="01"/>
+            <part name="11.4d" crc="6c7f85c5" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="6.6b" crc="edbaad3f" map="01"/>
-            <part name="4.6d" crc="0c6b0772" map="10"/>
+            <part name="10.6b" crc="d86bad81" map="01"/>
+            <part name="12.6d" crc="4de8a3ee" map="10"/>
         </interleave>
 
         <!-- gfx2 - starts at 0x20000 -->
@@ -73,6 +73,6 @@
     </rom>
 
     <rom index="1">
-        <part>03</part>
+        <part>01</part>
     </rom>
 </misterromdescription>
