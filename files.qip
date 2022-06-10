@@ -1,6 +1,4 @@
 set_global_assignment -name SYSTEMVERILOG_FILE terracresta.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/video_timing.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/pause.sv
 
 set_global_assignment -name QIP_FILE rtl/fx86k/fx68k.qip
 
@@ -19,14 +17,10 @@ set_global_assignment -name QIP_FILE sys/pll_cfg.qip
 set_global_assignment -name QIP_FILE sys/pll_audio.qip
 set_global_assignment -name CDF_FILE jtag.cdf
 set_global_assignment -name QIP_FILE sys/sys.qip
+
 set_global_assignment -name SYSTEMVERILOG_FILE terracresta.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/video_timing.sv
 set_global_assignment -name VERILOG_FILE rtl/chip_select.v
 set_global_assignment -name VERILOG_FILE rtl/pause.v
-set_global_assignment -name QIP_FILE rtl/mem/ram4kx8dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram48kx8dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram128kx8dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram16kx8dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram64bx64dp.qip
-set_global_assignment -name QIP_FILE rtl/mem/ram64kx8dp.qip
+set_global_assignment -name VHDL_FILE rtl/mem/dual_port_ram.vhd
 
