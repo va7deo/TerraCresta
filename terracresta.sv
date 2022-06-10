@@ -242,7 +242,7 @@ localparam CONF_STR = {
     "P2OP,Pause when OSD is open,Off,On;",
     "P2OQ,Dim video after 10s,Off,On;",
     "-;",
-    "P3,PCB Debug;",
+    "P3,PCB & Debug Settings;",
     "P3-;",
     "P3o2,Turbo (Amatelass Sets),Off,On;",
     "P3o3,Service Menu,Off,On;",
@@ -440,6 +440,9 @@ end
 wire    pause_cpu;
 wire    hs_pause;
 
+wire [23:0] rgb_pause_out;
+wire dim_video;
+
 pause #(4,4,4,48) pause (
     .clk_sys(clk_sys),
     .reset(reset),
@@ -451,7 +454,8 @@ pause #(4,4,4,48) pause (
     .OSD_STATUS(OSD_STATUS),
     .r(rgb[11:8]),
     .g(rgb[7:4]),
-    .b(rgb[3:0])
+    .b(rgb[3:0]),
+    .rgb_out(rgb_pause_out)
 );
 
 
