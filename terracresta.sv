@@ -232,17 +232,19 @@ localparam CONF_STR = {
     "P1-;",
     "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
     "P1-;",
+    "P1O2,Video Mode,NTSC,PAL;",
     "P1OL,Video Signal,RGBS/YPbPr,Y/C;",
+    "P1-;",
     "P1OOR,H-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P2-;",
     "P2,Pause Options;",
-    "P2OP,Pause when OSD is open,Off,On;",
-    "P2OQ,Dim video after 10s,Off,On;",
+    "P2OM,Pause when OSD is open,Off,On;",
+    "P2ON,Dim video after 10s,Off,On;",
     "-;",
-    "P3,PCB Debug;",
+    "P3,PCB & Debug Settings;",
     "P3-;",
-    "P3o2,Turbo (Amatelass Sets),Off,On;",
+    "P3o2,Turbo (Amazon Sets),Off,On;",
     "P3o3,Service Menu,Off,On;",
     "P3-;",
     "P3o5,Foreground Layer,On,Off;",
@@ -438,6 +440,7 @@ end
 wire    pause_cpu;
 wire    hs_pause;
 
+
 // 8 bits per colour, 72MHz sys clk
 pause #(8,8,8,72) pause 
 (
@@ -445,7 +448,7 @@ pause #(8,8,8,72) pause
     .reset(reset),
     .user_button(b_pause),
     .pause_request(hs_pause),
-    .options(status[21:20]),
+    .options(status[23:22]),
     .pause_cpu(pause_cpu),
     .dim_video(dim_video),
     .OSD_STATUS(OSD_STATUS),
@@ -457,6 +460,7 @@ pause #(8,8,8,72) pause
 
 wire [23:0] rgb_pause_out;
 wire dim_video;
+
 
 reg user_flip;
 
