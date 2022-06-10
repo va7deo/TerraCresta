@@ -10,11 +10,11 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 
 ## Supported Games
 
-| Title | Status | Released | Protection | Unprotected Sets |
+| Title | Status | Released | Protection | Protected Sets |
 |------|---------|----------|------------|------------------|
 [**Terra Cresta**](https://en.wikipedia.org/wiki/Terra_Cresta)                | Implemented | **Y** | None     | N/A                    |
-[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Implemented | **Y** | NB1412M2 | **amatelass, amazon, amazont**  |
-[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Implemented | **Y** | NB1412M2 | **horekid**                     |
+[**Sei Senshi Amatelass**](https://en.wikipedia.org/wiki/Nihon_Bussan)        | Implemented | **Y** | NB1412M2 | **amatelass, amazon**  |
+[**Kid no Hore Hore Daisakusen**](https://en.wikipedia.org/wiki/Nihon_Bussan) | Implemented | **Y** | NB1412M2 | **horekid**            |
 
 ## External Modules
 
