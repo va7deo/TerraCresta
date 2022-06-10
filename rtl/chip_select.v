@@ -64,10 +64,10 @@ end
 endfunction
 
 function z80_mem_cs;
-        input [15:0] base_address;
-        input  [7:0] width;
+        input [15:0] start_address;
+        input [15:0] end_address;
 begin
-    z80_mem_cs = ( z80_addr >> width == base_address >> width ) & !MREQ_n;
+    z80_mem_cs = ( z80_addr >= start_address && z80_addr <= end_address ) & !MREQ_n;
 end
 endfunction
 
@@ -81,100 +81,84 @@ endfunction
 
 always @ (*) begin
     // Memory mapping based on PCB type
-    case (pcb)
-        pcb_terra_cresta: begin
-            prog_rom_cs       = m68k_cs( 24'h000000, 24'h01ffff );
-            m68k_ram_cs       = m68k_cs( 24'h020000, 24'h021fff );
-            bg_ram_cs         = m68k_cs( 24'h022000, 24'h022fff );
-            m68k_ram1_cs      = m68k_cs( 24'h023000, 24'h023fff );
 
-            input_p1_cs       = m68k_cs( 24'h024000, 24'h024001 );
-            input_p2_cs       = m68k_cs( 24'h024002, 24'h024003 );
-            input_system_cs   = m68k_cs( 24'h024004, 24'h024005 );
-            input_dsw_cs      = m68k_cs( 24'h024006, 24'h024007 );
+    prot_chip_data_cs = 0;
+    prot_chip_cmd_cs  = 0;
 
-            scroll_x_cs       = m68k_cs( 24'h026002, 24'h024003 );
-            scroll_y_cs       = m68k_cs( 24'h026004, 24'h024005 );
+    if ( pcb == pcb_terra_cresta ) begin
+        prog_rom_cs       = m68k_cs( 24'h000000, 24'h01ffff );
+        m68k_ram_cs       = m68k_cs( 24'h020000, 24'h021fff );
+        bg_ram_cs         = m68k_cs( 24'h022000, 24'h022fff );
+        m68k_ram1_cs      = m68k_cs( 24'h023000, 24'h023fff );
 
-            sound_latch_cs    = m68k_cs( 24'h02600c, 24'h02400d );
-            fg_ram_cs         = m68k_cs( 24'h028000, 24'h0287ff );
+        input_p1_cs       = m68k_cs( 24'h024000, 24'h024001 );
+        input_p2_cs       = m68k_cs( 24'h024002, 24'h024003 );
+        input_system_cs   = m68k_cs( 24'h024004, 24'h024005 );
+        input_dsw_cs      = m68k_cs( 24'h024006, 24'h024007 );
 
-            z80_rom_cs        = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
-            z80_ram_cs        = z80_mem_cs( 16'hc000,14 );
+        scroll_x_cs       = m68k_cs( 24'h026002, 24'h026003 );
+        scroll_y_cs       = m68k_cs( 24'h026004, 24'h026005 );
 
-            z80_sound0_cs     = z80_io_cs(  8'h00 );
-            z80_sound1_cs     = z80_io_cs(  8'h01 );
-            z80_dac1_cs       = z80_io_cs(  8'h02 );
-            z80_dac2_cs       = z80_io_cs(  8'h03 );
-            z80_latch_clr_cs  = z80_io_cs(  8'h04 );
-            z80_latch_r_cs    = z80_io_cs(  8'h06 );
-        end
+        sound_latch_cs    = m68k_cs( 24'h02600c, 24'h02400d );
+        fg_ram_cs         = m68k_cs( 24'h028000, 24'h0287ff );
+    end else begin
+        prog_rom_cs       = m68k_cs( 24'h000000, 24'h01ffff );
+        m68k_ram_cs       = m68k_cs( 24'h040000, 24'h040fff );
+        bg_ram_cs         = m68k_cs( 24'h042000, 24'h042fff );
+        m68k_ram1_cs      = 0;
 
-        pcb_horekidb2: begin
-            prog_rom_cs       = m68k_cs( 24'h000000, 24'h01ffff );
-            m68k_ram_cs       = m68k_cs( 24'h040000, 24'h040fff );
-            bg_ram_cs         = m68k_cs( 24'h042000, 24'h042fff );
-            m68k_ram1_cs      = 0;
+        input_p1_cs       = m68k_cs( 24'h044000, 24'h044001 );
+        input_p2_cs       = m68k_cs( 24'h044002, 24'h044003 );
+        input_system_cs   = m68k_cs( 24'h044004, 24'h044005 );
+        input_dsw_cs      = m68k_cs( 24'h044006, 24'h044007 );
 
-            input_dsw_cs      = m68k_cs( 24'h044000, 24'h044001 );
-            input_system_cs   = m68k_cs( 24'h044002, 24'h044003 );
-            input_p2_cs       = m68k_cs( 24'h044004, 24'h044005 );
+        scroll_x_cs       = m68k_cs( 24'h046002, 24'h046003 );
+        scroll_y_cs       = m68k_cs( 24'h046004, 24'h046004 );
+
+        sound_latch_cs    = m68k_cs( 24'h04600c, 24'h04600d );
+
+        fg_ram_cs         = m68k_cs( 24'h050000, 24'h050fff );
+
+
+        prog_rom_cs       = m68k_cs( 24'h000000, 24'h01ffff );
+        m68k_ram_cs       = m68k_cs( 24'h040000, 24'h040fff );
+        bg_ram_cs         = m68k_cs( 24'h042000, 24'h042fff );
+        m68k_ram1_cs      = 0;
+
+        if ( pcb == pcb_horekid ) begin
             input_p1_cs       = m68k_cs( 24'h044006, 24'h044007 );
-
-            scroll_x_cs       = m68k_cs( 24'h046002, 24'h046003 );
-            scroll_y_cs       = m68k_cs( 24'h046004, 24'h046004 );
-
-            sound_latch_cs    = m68k_cs( 24'h04600c, 24'h04600d );
-
-            fg_ram_cs         = m68k_cs( 24'h050000, 24'h050fff );
-
-            prot_chip_data_cs = 0;
-            prot_chip_cmd_cs  = 0;
-
-            z80_rom_cs        = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
-            z80_ram_cs        = z80_mem_cs( 16'hc000,14 );
-
-            z80_sound0_cs     = z80_io_cs(  8'h00 );
-            z80_sound1_cs     = z80_io_cs(  8'h01 );
-            z80_dac1_cs       = z80_io_cs(  8'h02 );
-            z80_dac2_cs       = z80_io_cs(  8'h03 );
-            z80_latch_clr_cs  = z80_io_cs(  8'h04 );
-            z80_latch_r_cs    = z80_io_cs(  8'h06 );
-        end
-
-        pcb_horekid,pcb_amazon,pcb_amazont: begin
-            prog_rom_cs       = m68k_cs( 24'h000000, 24'h01ffff );
-            m68k_ram_cs       = m68k_cs( 24'h040000, 24'h040fff );
-            bg_ram_cs         = m68k_cs( 24'h042000, 24'h042fff );
-            m68k_ram1_cs      = 0;
-
+            input_p2_cs       = m68k_cs( 24'h044004, 24'h044005 );
+            input_system_cs   = m68k_cs( 24'h044002, 24'h044003 );
+            input_dsw_cs      = m68k_cs( 24'h044000, 24'h044001 );
+        end else begin
             input_p1_cs       = m68k_cs( 24'h044000, 24'h044001 );
             input_p2_cs       = m68k_cs( 24'h044002, 24'h044003 );
             input_system_cs   = m68k_cs( 24'h044004, 24'h044005 );
             input_dsw_cs      = m68k_cs( 24'h044006, 24'h044007 );
-
-            scroll_x_cs       = m68k_cs( 24'h046002, 24'h046003 );
-            scroll_y_cs       = m68k_cs( 24'h046004, 24'h046004 );
-
-            sound_latch_cs    = m68k_cs( 24'h04600c, 24'h04600d );
-
-            fg_ram_cs         = m68k_cs( 24'h050000, 24'h050fff );
-
-            prot_chip_data_cs = m68k_cs( 24'h070000, 24'h070001 );
-            prot_chip_cmd_cs  = m68k_cs( 24'h070002, 24'h070003 );
-
-            z80_rom_cs        = z80_mem_cs( 16'h0000,15 ) | z80_mem_cs( 16'h8000,14 );
-            z80_ram_cs        = z80_mem_cs( 16'hc000,14 );
-
-            z80_sound0_cs     = z80_io_cs(  8'h00 );
-            z80_sound1_cs     = z80_io_cs(  8'h01 );
-            z80_dac1_cs       = z80_io_cs(  8'h02 );
-            z80_dac2_cs       = z80_io_cs(  8'h03 );
-            z80_latch_clr_cs  = z80_io_cs(  8'h04 );
-            z80_latch_r_cs    = z80_io_cs(  8'h06 );
         end
 
+        scroll_x_cs       = m68k_cs( 24'h046002, 24'h046003 );
+        scroll_y_cs       = m68k_cs( 24'h046004, 24'h046004 );
 
-    endcase
+        sound_latch_cs    = m68k_cs( 24'h04600c, 24'h04600d );
+
+        fg_ram_cs         = m68k_cs( 24'h050000, 24'h050fff );
+    end
+
+    if ( pcb == pcb_amazon || pcb == pcb_amazont || pcb == pcb_horekid ) begin
+        prot_chip_data_cs = m68k_cs( 24'h070000, 24'h070001 );
+        prot_chip_cmd_cs  = m68k_cs( 24'h070002, 24'h070003 );
+    end
+    
+    z80_rom_cs        = z80_mem_cs( 16'h0000, 16'hbfff ) ;
+    z80_ram_cs        = z80_mem_cs( 16'hc000, 16'hcfff ) ;
+
+    z80_sound0_cs     = z80_io_cs(  8'h00 );
+    z80_sound1_cs     = z80_io_cs(  8'h01 );
+    z80_dac1_cs       = z80_io_cs(  8'h02 );
+    z80_dac2_cs       = z80_io_cs(  8'h03 );
+    z80_latch_clr_cs  = z80_io_cs(  8'h04 );
+    z80_latch_r_cs    = z80_io_cs(  8'h06 );
+
 end
 endmodule

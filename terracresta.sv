@@ -321,6 +321,12 @@ reg [15:0] p2;
 reg [15:0] dsw1 ;
 reg [15:0] sys ;
 
+//localparam pcb_terra_cresta = 0;
+//localparam pcb_amazon       = 1;
+//localparam pcb_horekid      = 2;
+//localparam pcb_amazont      = 3;
+//localparam pcb_horekidb2    = 4;
+
 always @ (posedge clk_sys) begin
     p1 <= 16'hffff;
     p1[5:0] <= ~{ p1_buttons[1:0], p1_right, p1_left ,p1_down, p1_up};
@@ -329,18 +335,18 @@ always @ (posedge clk_sys) begin
     p2[5:0] <= ~{ p2_buttons[1:0], p2_right, p2_left ,p2_down, p2_up};
     
     sys <= 16'hffff;
-    if ( pcb == 0 || pcb == 1 || pcb == 2 ) begin
-        // terracre and amazon
+    if ( pcb == 0 || pcb == 2 ) begin
+        // terracre and horekid
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
         sys[8] <= ~(p1_start1 | p2_start1) ; // coin [5]
         sys[9] <= ~(p1_start2 | p2_start2) ;
     end else begin
-        // amazont and horekidb2
+        // amazon, amazont and horekidb2
         // PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2 )
         // PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START1 )
-        sys[9] <= ~(p1_start1 | p2_start1) ;
         sys[8] <= ~(p1_start2 | p2_start2) ; // coin [5]
+        sys[9] <= ~(p1_start1 | p2_start1) ;
     end
     sys[10] <= ~p1_coin ;
     sys[11] <= ~p2_coin ;
@@ -744,7 +750,48 @@ always @(posedge clk_sys)
     if (ioctl_wr && (ioctl_index==1))
         pcb <= ioctl_dout;
 
-chip_select cs (.*);
+chip_select cs (
+    .pcb(pcb),
+
+    .m68k_a(m68k_a),
+    .m68k_as_n(m68k_as_n),
+
+    .z80_addr(z80_addr),
+    .MREQ_n(MREQ_n),
+    .IORQ_n(IORQ_n),
+    .M1_n(M1_n),
+
+    // M68K selects
+    .prog_rom_cs(prog_rom_cs),
+    .m68k_ram_cs(m68k_ram_cs),
+    .bg_ram_cs(bg_ram_cs),
+    .m68k_ram1_cs(m68k_ram1_cs),
+    .fg_ram_cs(fg_ram_cs),
+
+    .input_p1_cs(input_p1_cs),
+    .input_p2_cs(input_p2_cs),
+    .input_system_cs(input_system_cs),
+    .input_dsw_cs(input_dsw_cs),
+
+    .scroll_x_cs(scroll_x_cs),
+    .scroll_y_cs(scroll_y_cs),
+
+    .sound_latch_cs(sound_latch_cs),
+
+    .prot_chip_data_cs(prot_chip_data_cs),
+    .prot_chip_cmd_cs(prot_chip_cmd_cs),
+
+    // Z80 selects
+    .z80_rom_cs(z80_rom_cs),
+    .z80_ram_cs(z80_ram_cs),
+
+    .z80_sound0_cs(z80_sound0_cs),
+    .z80_sound1_cs(z80_sound1_cs),
+    .z80_dac1_cs(z80_dac1_cs),
+    .z80_dac2_cs(z80_dac2_cs),
+    .z80_latch_clr_cs(z80_latch_clr_cs),
+    .z80_latch_r_cs(z80_latch_r_cs)
+);
 
 // CPU outputs
 wire m68k_rw         ;    // Read = 1, Write = 0
