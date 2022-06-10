@@ -1,14 +1,14 @@
 <misterromdescription>
-    <name>Kid no Hore Hore Daisakusen</name>
+    <name>Kid no Hore Hore Daisakusen (Bootleg Set 1)</name>
     <mameversion>0240</mameversion>
-    <setname>horekid</setname>
+    <setname>horekidb</setname>
     <year>1987</year>
     <manufacturer>Nichibutsu</manufacturer>
     <category>Platformer</category>
     <rbf>terracresta</rbf>
 
-    <switches default="8F,AF">
-        <!-- DSW -->
+    <switches default="DSW">
+        <!-- IN0 -->
         <dip name="Lives" bits="0,1" ids="6,5,4,3"/>
         <dip name="Bonus Life" bits="2,3" ids="50k/90k(E),20k/90k(E),50k/60k(E),20k/60k(E)"/>
         <dip name="Demo Sounds" bits="4" ids="On,Off"/>
@@ -20,14 +20,14 @@
         <dip name="Debug Mode" bits="14,15" ids="Off,Off,On,Off"/>
     </switches>
 
-    <buttons names="Dig/Burry,Open/Close Door,Start (1p),Start (2p),Coin,Pause,Service" default="A,B,X,Y,R,L,Start"/>
+    <buttons names="Dig/Burry,Open/Close Door,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
 
-    <rom index="0" zip="horekid.zip" md5="None">
+    <rom index="0" zip="horekidb.zip|horekid.zip" md5="None">
 
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="horekid.01" crc="a282faf8" map="01"/>
-            <part name="horekid.03" crc="90ec840f" map="10"/>
+            <part name="knhhd7" crc="3bbb475b" map="01"/>
+            <part name="knhhd5" crc="786619c7" map="10"/>
         </interleave>
         <interleave output="16">
             <part name="horekid.02" crc="ee7d52bb" map="01"/>

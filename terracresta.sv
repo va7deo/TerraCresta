@@ -440,8 +440,6 @@ end
 wire    pause_cpu;
 wire    hs_pause;
 
-wire [23:0] rgb_pause_out;
-wire dim_video;
 
 pause #(4,4,4,48) pause (
     .clk_sys(clk_sys),
@@ -457,6 +455,9 @@ pause #(4,4,4,48) pause (
     .b(rgb[3:0]),
     .rgb_out(rgb_pause_out)
 );
+
+wire [23:0] rgb_pause_out;
+wire dim_video;
 
 
 reg user_flip;
@@ -589,7 +590,7 @@ arcade_video #(256,24) arcade_video
         .clk_video(clk_sys),
         .ce_pix(clk_6M),
 
-        .RGB_in(rgb[23:0]),
+        .RGB_in(rgb_pause_out),
 
         .HBlank(hbl_delay),
         .VBlank(vbl_delay),

@@ -1,7 +1,7 @@
 <misterromdescription>
-    <name>Kid no Hore Hore Daisakusen (Bootleg Set 2)</name>
-    <mameversion>0242</mameversion>
-    <setname>horekidb2</setname>
+    <name>Booby Kids (Italian manufactured graphic hack / bootleg of Kid no Hore Hore Daisakusen (bootleg)</name>
+    <mameversion>0240</mameversion>
+    <setname>boobhack</setname>
     <year>1987</year>
     <manufacturer>Nichibutsu</manufacturer>
     <category>Platformer</category>
@@ -20,54 +20,55 @@
         <dip name="Debug Mode" bits="14,15" ids="Off,Off,On,Off"/>
     </switches>
 
-    <buttons names="Dig/Burry,Open/Close Door,Start (1p),Start (2p),Coin,Pause,Service" default="A,B,X,Y,R,L,Start"/>
+    <buttons names="Dig/Burry,Open/Close Door,Start (1p),Start (2p),Coin,Pause" default="A,B,X,R,L,Start"/>
 
-    <rom index="0" zip="horekidb2.zip|horekid.zip" md5="None">
+    <rom index="0" zip="boobhack.zip|horekid.zip" md5="None">
 
         <!-- maincpu - starts at 0x0 -->
         <interleave output="16">
-            <part name="1.bin" crc="af9cdd7e" map="01"/>
-            <part name="5.bin" crc="2df0e086" map="10"/>
+            <part name="1-b.bin" crc="3bbb475b" map="01"/>
+            <part name="1-c.bin" crc="786619c7" map="10"/>
         </interleave>
         <interleave output="16">
-            <part name="2.bin" crc="ee7d52bb" map="01"/>
-            <part name="6.bin" crc="375c0c50" map="10"/>
+            <part name="1-a.bin" crc="ee7d52bb" map="01"/>
+            <part name="1-d.bin" crc="375c0c50" map="10"/>
         </interleave>
 
         <!-- gfx2 - starts at 0x20000 -->
-        <part name="9.bin" crc="da25ae10"/>
-        <part name="10.bin" crc="616e4321"/>
-        <part name="11.bin" crc="8c7d2be2"/>
-        <part name="12.bin" crc="a0066b02"/>
+        <part name="1-e.bin" crc="da25ae10"/>
+        <part name="1-f.bin" crc="616e4321"/>
+        <part name="1-g.bin" crc="8c7d2be2"/>
+        <part name="1-h.bin" crc="a0066b02"/>
 
         <!-- gfx3 - starts at 0x40000 -->
-        <part name="14b.bin" crc="a3caa07a"/>
-        <part name="15b.bin" crc="0e48ff8e"/>
-        <part name="16b.bin" crc="e300747a"/>
-        <part name="17b.bin" crc="51105741"/>
+        <part name="1-l.bin" crc="a3caa07a"/>
+        <part name="1-m.bin" crc="15b6cbdf"/>
+        <part name="1-n.bin" crc="e300747a"/>
+        <part name="1-o.bin" crc="cddc6a6c"/>
 
         <!-- gfx1 - starts at 0x60000 -->
-        <part name="horekid.16" crc="104b77cc"/>
+        <part name="1-p.bin" crc="104b77cc"/>
         <part repeat="0xE000"> FF</part>
 
         <!-- audiocpu - starts at 0x70000 -->
-        <part name="horekid.09" crc="49cd3b81"/>
-        <part name="horekid.10" crc="c1eaa938"/>
-        <part name="horekid.11" crc="0a2bc702"/>
+        <part name="1-i.bin" crc="49cd3b81"/>
+        <part name="1-j.bin" crc="c1eaa938"/>
+        <part name="1-k.bin" crc="0a2bc702"/>
         <part repeat="0x2000"> FF</part>
 
-        <!-- proms - starts at 0x7E000 -->
+        <!-- user1 - starts at 0x7E000 -->
+        <part name="kid_prom.4e" crc="e4fb54ee"/>
+
+        <!-- proms - starts at 0x7E100 -->
         <part name="kid_prom.10f" crc="ca13ce23"/>
         <part name="kid_prom.11f" crc="fb44285a"/>
         <part name="kid_prom.12f" crc="40d41237"/>
         <part name="kid_prom.2g" crc="4b9be0ed"/>
 
-        <!-- user1 - starts at 0x7E400 -->
-        <part name="kid_prom.4e" crc="e4fb54ee"/>
         <!-- Total 0x7E500 bytes - 505 kBytes -->
     </rom>
 
     <rom index="1">
-        <part>04</part>
+        <part>02</part>
     </rom>
 </misterromdescription>
