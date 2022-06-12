@@ -89,7 +89,7 @@ I C (Top Board)     | [**Motorola 68000 CPU**](https://en.wikipedia.org/wiki/Mot
 
 ### GFX Layer Toggle
 
--  The three graphics layers can be toggled in the OSD under the Debug options or by pressing<br> F7-F9 on the keyboard.
+-  The three graphical layers can be toggled in the OSD under the Debug options or by pressing<br> F7-F9 on the keyboard.
 
 <br>
 
@@ -119,7 +119,7 @@ Kid no Hore Hore Daisakusen| 4-Way | <img src="https://user-images.githubusercon
 
 <br>
 
-- Upright cabinet shares a 1L2B control panel layout. Players are required to switch controller. The deefault cabinet style is set to table for Terra Cresta and Sei Senshi Amatelass. This enables multiple player controllers.
+- Upright cabinet shares a 1L2B control panel layout. Players are required to switch controller. The default cabinet style is set to table for Terra Cresta and Sei Senshi Amatelass. This enables multiple player controllers.
 
 ### Keyboard Handler
 
