@@ -1137,7 +1137,12 @@ fx68k fx68k (
     .eab(m68k_a[23:1])
 );
 
+wire [31:0] gfx1_q;
+wire [31:0] gfx2_q;
+
 always @(posedge clk_sys) begin
+
+if (clk_6M) begin
 
         case ({flip, hc[2:0]})
             4'b0011: gfx1_dout <= gfx1_q[ 7: 0];
@@ -1390,9 +1395,8 @@ always @ (posedge clk_sys) begin
         z80_wait_n <= 0;
         sound_wr <= 0 ;
           sound_latch <= 8'h00;
-   end
-
-
+        end
+    end
 end
 
 reg [7:0]  prot_dout;
