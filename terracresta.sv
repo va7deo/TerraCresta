@@ -54,6 +54,7 @@ module emu
     output  [7:0] VGA_B,
     output        VGA_HS,
     output        VGA_VS,
+    output        flipped,
     output        VGA_DE,    // = ~(VBlank | HBlank)
     output        VGA_F1,
     output [2:0]  VGA_SL,
@@ -536,7 +537,8 @@ assign  reset = RESET | status[0] | key_reset;
 wire rotate_ccw = 1;
 wire no_rotate = orientation | direct_video;
 wire video_rotated ;
-wire flip = 0;
+reg        flip = 0;
+assign     flipped = flip;
 
 reg [23:0]     rgb;
 
