@@ -24,6 +24,7 @@ module chip_select
     output reg   input_system_cs,
     output reg   input_dsw_cs,
 
+    output reg   flip_cs,
     output reg   scroll_x_cs,
     output reg   scroll_y_cs,
 
@@ -96,6 +97,7 @@ always @ (*) begin
         input_system_cs   = m68k_cs( 24'h024004, 24'h024005 );
         input_dsw_cs      = m68k_cs( 24'h024006, 24'h024007 );
 
+        flip_cs           = m68k_cs( 24'h026000, 24'h026001 );
         scroll_x_cs       = m68k_cs( 24'h026002, 24'h026003 );
         scroll_y_cs       = m68k_cs( 24'h026004, 24'h026005 );
 
@@ -112,6 +114,7 @@ always @ (*) begin
         input_system_cs   = m68k_cs( 24'h044004, 24'h044005 );
         input_dsw_cs      = m68k_cs( 24'h044006, 24'h044007 );
 
+        flip_cs           = m68k_cs( 24'h046000, 24'h046001 );
         scroll_x_cs       = m68k_cs( 24'h046002, 24'h046003 );
         scroll_y_cs       = m68k_cs( 24'h046004, 24'h046004 );
 

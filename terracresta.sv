@@ -628,8 +628,11 @@ wire [11:0] spr_pix = sprite_line_buffer[hc];
 
 wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
 
-wire [9:0] hc_s = hc[7:0] + scroll_x ;
-wire [8:0] vc_s = vc[7:0] + scroll_y ;
+wire  [9:0] hc_s = flip ? ~hc[7:0] + scroll_x + 9'd256 : hc[7:0] + scroll_x ;
+wire  [8:0] vc_s = flip ? ~vc[7:0] + scroll_y + 9'd256 : vc[7:0] + scroll_y;
+
+wire  [8:0] hc_x = {hc[8], hc[7:0] ^ {8{flip}}};
+wire  [8:0] vc_x = vc ^ {9{flip}};
 
 reg  [3:0] gfx1_pix ;
 reg  [7:0] gfx2_pix ;
@@ -734,6 +737,7 @@ wire input_p2_cs;
 wire input_system_cs;
 wire input_dsw_cs;
 
+wire flip_cs;
 wire scroll_x_cs;
 wire scroll_y_cs;
 
@@ -786,6 +790,7 @@ chip_select cs (
     .input_system_cs(input_system_cs),
     .input_dsw_cs(input_dsw_cs),
 
+    .flip_cs(flip_cs),
     .scroll_x_cs(scroll_x_cs),
     .scroll_y_cs(scroll_y_cs),
 
@@ -1132,6 +1137,36 @@ fx68k fx68k (
     .eab(m68k_a[23:1])
 );
 
+always @(posedge clk_sys) begin
+
+        case ({flip, hc[2:0]})
+            4'b0011: gfx1_dout <= gfx1_q[ 7: 0];
+            4'b0101: gfx1_dout <= gfx1_q[15: 8];
+            4'b0111: gfx1_dout <= gfx1_q[23:16];
+            4'b0001: gfx1_dout <= gfx1_q[31:24];
+
+            4'b1000: gfx1_dout <= gfx1_q[ 7: 0];
+            4'b1110: gfx1_dout <= gfx1_q[15: 8];
+            4'b1100: gfx1_dout <= gfx1_q[23:16];
+            4'b1010: gfx1_dout <= gfx1_q[31:24];
+            default: ;
+        endcase
+
+        case ({flip, hc_s[2:0]})
+            4'b0011: gfx2_dout <= gfx2_q[ 7: 0];
+            4'b0101: gfx2_dout <= gfx2_q[15: 8];
+            4'b0111: gfx2_dout <= gfx2_q[23:16];
+            4'b0001: gfx2_dout <= gfx2_q[31:24];
+
+            4'b1111: gfx2_dout <= gfx2_q[ 7: 0];
+            4'b1001: gfx2_dout <= gfx2_q[15: 8];
+            4'b1011: gfx2_dout <= gfx2_q[23:16];
+            4'b1101: gfx2_dout <= gfx2_q[31:24];
+
+            default: ;
+        endcase
+    end
+end
 
 // z80 bus
 wire    [7:0] z80_rom_data;
@@ -1272,6 +1307,15 @@ always @ (posedge clk_sys) begin
      
     if ( clk_16M == 1 ) begin
 
+    if (reset) begin
+        flip <= 0;
+        scroll_x <= 0;
+        scroll_y <= 0;
+        prot_state <= 0;
+    end else begin
+        if (!m68k_rw & !m68k_lds_n & flip_cs) begin
+            flip <= m68k_dout[2];
+        end
          if (!m68k_rw & scroll_x_cs ) begin
               scroll_x <= m68k_dout[15:0];
          end
