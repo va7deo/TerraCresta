@@ -695,7 +695,34 @@ always @ (posedge clk_sys) begin
         gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
         
     // 2
-        pal_idx <= ( gfx1_pix < 4'hf && fg_enable ) ? { 4'b0, gfx1_pix } : ( spr_enable == 0 || ( bg_enable == 1 && spr_pix == sprite_trans_pen && scroll_x[13] == 0 )) ? gfx2_pix :  spi ;        
+        pal_idx <= ( gfx1_pix < 4'hf && fg_enable ) ? { 4'b0, gfx1_pix } : ( spr_enable == 0 || ( bg_enable == 1 && spr_pix == sprite_trans_pen && scroll_x[13] == 0 )) ? gfx2_pix :  spi ;
+
+        case ({flip, hc[2:0]})
+            4'b0011: gfx1_pix <= gfx1_q[7:0]  ;
+            4'b0101: gfx1_pix <= gfx1_q[15:8] ;
+            4'b0111: gfx1_pix <= gfx1_q[23:16];
+            4'b0001: gfx1_pix <= gfx1_q[31:24];
+
+            4'b1111: gfx1_pix <= gfx1_q[7:0]  ;
+            4'b1001: gfx1_pix <= gfx1_q[15:8] ;
+            4'b1011: gfx1_pix <= gfx1_q[23:16];
+            4'b1101: gfx1_pix <= gfx1_q[31:24];
+            default: ;
+        endcase
+
+//       case ({flip, hc_s[2:0]})
+//           4'b0011: gfx2_pen <= gfx2_q[7:0]  ;
+//           4'b0101: gfx2_pen <= gfx2_q[15:8] ;
+//           4'b0111: gfx2_pen <= gfx2_q[23:16];
+//           4'b0001: gfx2_pen <= gfx2_q[31:24];
+//
+//          4'b1111: gfx2_pen <= gfx2_q[7:0]  ;
+//          4'b1001: gfx2_pen <= gfx2_q[15:8] ;
+//          4'b1011: gfx2_pen <= gfx2_q[23:16];
+//          4'b1101: gfx2_pen <= gfx2_q[31:24];
+//
+//          default: ;
+//      endcase
     end
 end
     
@@ -1142,38 +1169,38 @@ fx68k fx68k (
 wire [31:0] gfx1_q;
 wire [31:0] gfx2_q;
 
-always @(posedge clk_sys) begin
-
-if (clk_6M) begin
-
-        case ({flip, hc[2:0]})
-            4'b0011: gfx1_dout <= gfx1_q[ 7: 0];
-            4'b0101: gfx1_dout <= gfx1_q[15: 8];
-            4'b0111: gfx1_dout <= gfx1_q[23:16];
-            4'b0001: gfx1_dout <= gfx1_q[31:24];
-
-            4'b1000: gfx1_dout <= gfx1_q[ 7: 0];
-            4'b1110: gfx1_dout <= gfx1_q[15: 8];
-            4'b1100: gfx1_dout <= gfx1_q[23:16];
-            4'b1010: gfx1_dout <= gfx1_q[31:24];
-            default: ;
-        endcase
-
-        case ({flip, hc_s[2:0]})
-            4'b0011: gfx2_dout <= gfx2_q[ 7: 0];
-            4'b0101: gfx2_dout <= gfx2_q[15: 8];
-            4'b0111: gfx2_dout <= gfx2_q[23:16];
-            4'b0001: gfx2_dout <= gfx2_q[31:24];
-
-            4'b1111: gfx2_dout <= gfx2_q[ 7: 0];
-            4'b1001: gfx2_dout <= gfx2_q[15: 8];
-            4'b1011: gfx2_dout <= gfx2_q[23:16];
-            4'b1101: gfx2_dout <= gfx2_q[31:24];
-
-            default: ;
-        endcase
-    end
-end
+//always @(posedge clk_6M) begin
+//
+//if (clk_6M) begin
+//
+//        case ({flip, hc[2:0]})
+//            4'b0011: gfx1_pix <= gfx1_q[7:0]  ;
+//            4'b0101: gfx1_pix <= gfx1_q[15:8] ;
+//            4'b0111: gfx1_pix <= gfx1_q[23:16];
+//            4'b0001: gfx1_pix <= gfx1_q[31:24];
+//
+//            4'b1111: gfx1_pix <= gfx1_q[7:0]  ;
+//            4'b1001: gfx1_pix <= gfx1_q[15:8] ;
+//            4'b1011: gfx1_pix <= gfx1_q[23:16];
+//            4'b1101: gfx1_pix <= gfx1_q[31:24];
+//            default: ;
+//        endcase
+//
+//        case ({flip, hc_s[2:0]})
+//            4'b0011: gfx2_pen <= gfx2_q[7:0]  ;
+//            4'b0101: gfx2_pen <= gfx2_q[15:8] ;
+//            4'b0111: gfx2_pen <= gfx2_q[23:16];
+//            4'b0001: gfx2_pen <= gfx2_q[31:24];
+//
+//            4'b1111: gfx2_pen <= gfx2_q[7:0]  ;
+//            4'b1001: gfx2_pen <= gfx2_q[15:8] ;
+//            4'b1011: gfx2_pen <= gfx2_q[23:16];
+//            4'b1101: gfx2_pen <= gfx2_q[31:24];
+//
+//            default: ;
+//        endcase
+//    end
+//end
 
 // z80 bus
 wire    [7:0] z80_rom_data;
