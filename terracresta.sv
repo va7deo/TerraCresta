@@ -710,25 +710,25 @@ always @ (posedge clk_sys) begin
             default: ;
         endcase
 
-//       case ({flip, hc_s[2:0]})
-//           4'b0011: gfx2_pen <= gfx2_q[7:0]  ;
-//           4'b0101: gfx2_pen <= gfx2_q[15:8] ;
-//           4'b0111: gfx2_pen <= gfx2_q[23:16];
-//           4'b0001: gfx2_pen <= gfx2_q[31:24];
-//
-//          4'b1111: gfx2_pen <= gfx2_q[7:0]  ;
-//          4'b1001: gfx2_pen <= gfx2_q[15:8] ;
-//          4'b1011: gfx2_pen <= gfx2_q[23:16];
-//          4'b1101: gfx2_pen <= gfx2_q[31:24];
-//
-//          default: ;
-//      endcase
+       case ({flip, hc_s[2:0]})
+           4'b0011: gfx2_pen <= gfx2_q[7:0]  ;
+           4'b0101: gfx2_pen <= gfx2_q[15:8] ;
+           4'b0111: gfx2_pen <= gfx2_q[23:16];
+           4'b0001: gfx2_pen <= gfx2_q[31:24];
+
+           4'b1111: gfx2_pen <= gfx2_q[7:0]  ;
+           4'b1001: gfx2_pen <= gfx2_q[15:8] ;
+           4'b1011: gfx2_pen <= gfx2_q[23:16];
+           4'b1101: gfx2_pen <= gfx2_q[31:24];
+
+          default: ;
+      endcase
     end
 end
-    
+
 wire [3:0] gfx2_pen ;
-assign gfx2_pen = ((   hc_s_r[0] == 0 ) ? gfx2_dout[3:0] : gfx2_dout[7:4] )    ;
-    
+// assign gfx2_pen = ((   hc_s_r[0] == 0 ) ? gfx2_dout[3:0] : gfx2_dout[7:4] )    ;
+
 /// 68k cpu
 
 always @ (posedge clk_sys) begin
