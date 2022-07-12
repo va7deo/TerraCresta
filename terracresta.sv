@@ -193,8 +193,15 @@ assign VGA_F1 = 0;
 assign VGA_SCALER = 0;
 assign HDMI_FREEZE = 0;
 
+//    .z80_sound0_cs(z80_sound0_cs),
+//    .z80_sound1_cs(z80_sound1_cs),
+//    .z80_dac1_cs(z80_dac1_cs),
+//    .z80_dac2_cs(z80_dac2_cs),
+//    .z80_latch_clr_cs(z80_latch_clr_cs),
+//    .z80_latch_r_cs(z80_latch_r_cs)
+    
 assign AUDIO_MIX = 0;
-assign LED_USER = reset & m68k_a[0] & | sprite_tile ;
+assign LED_USER = reset & m68k_a[0] & | sprite_tile & ^ {z80_rom_cs, z80_ram_cs, z80_sound0_cs,z80_sound1_cs,z80_dac1_cs,z80_dac2_cs,z80_latch_clr_cs,z80_latch_r_cs};
 assign LED_DISK = 0;
 assign LED_POWER = 0;
 assign BUTTONS = 0;
@@ -222,6 +229,7 @@ assign VIDEO_ARX = (!aspect_ratio) ? (orientation  ? 8'd4 : 8'd3) : (aspect_rati
 assign VIDEO_ARY = (!aspect_ratio) ? (orientation  ? 8'd3 : 8'd4) : 12'd0;
 
 `include "build_id.v" 
+
 localparam CONF_STR = {
     "Terra Cresta;;",
     "-;",
@@ -229,20 +237,23 @@ localparam CONF_STR = {
     "P1-;",
     "P1O89,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
     "P1OA,Orientation,Horz,Vert;",
+    "P1OC,Flip,Off,On;",
     "P1-;",
     "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
     "P1-;",
+    "P1O2,Video Mode,NTSC,PAL;",
     "P1OL,Video Signal,RGBS/YPbPr,Y/C;",
+    "P1-;",
     "P1OOR,H-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P1OSV,V-sync Adjust,0,1,2,3,4,5,6,7,-8,-7,-6,-5,-4,-3,-2,-1;",
     "P2-;",
     "P2,Pause Options;",
-    "P2OP,Pause when OSD is open,Off,On;",
-    "P2OQ,Dim video after 10s,Off,On;",
+    "P2OM,Pause when OSD is open,Off,On;",
+    "P2ON,Dim video after 10s,Off,On;",
     "-;",
-    "P3,PCB Debug;",
+    "P3,PCB & Debug Settings;",
     "P3-;",
-    "P3o2,Turbo (Amatelass Sets),Off,On;",
+    "P3o2,Turbo (Amazon Sets),Off,On;",
     "P3o3,Service Menu,Off,On;",
     "P3-;",
     "P3o5,Foreground Layer,On,Off;",
@@ -445,7 +456,7 @@ pause #(8,8,8,72) pause
     .reset(reset),
     .user_button(b_pause),
     .pause_request(hs_pause),
-    .options(status[21:20]),
+    .options(status[23:22]),
     .pause_cpu(pause_cpu),
     .dim_video(dim_video),
     .OSD_STATUS(OSD_STATUS),
@@ -458,7 +469,9 @@ pause #(8,8,8,72) pause
 wire [23:0] rgb_pause_out;
 wire dim_video;
 
-reg user_flip;
+wire menu_flip = status[12];
+reg  cocktail_flip;
+wire flip = menu_flip ^ cocktail_flip;
 
 wire pll_locked;
 
@@ -530,7 +543,6 @@ assign  reset = RESET | status[0] | key_reset;
 wire rotate_ccw = 1;
 wire no_rotate = orientation | direct_video;
 wire video_rotated ;
-wire flip = 0;
 
 reg [23:0]     rgb;
 
@@ -622,8 +634,11 @@ wire [11:0] spr_pix = sprite_line_buffer[hc];
 
 wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
 
-wire [9:0] hc_s = hc[7:0] + scroll_x ;
-wire [8:0] vc_s = vc[7:0] + scroll_y ;
+wire  [9:0] hc_s = hc[7:0] + scroll_x ;
+wire  [8:0] vc_s = vc[7:0] + scroll_y ;
+
+wire  [8:0] hc_x = {hc[8], hc[7:0] ^ {8{flip}}};
+//wire  [8:0] vc_x = vc ^ {9{flip}};
 
 reg  [3:0] gfx1_pix ;
 reg  [7:0] gfx2_pix ;
@@ -673,13 +688,14 @@ always @ (posedge clk_sys) begin
         gfx2_pal_h  <= bg_ram_dout[14:13];
         gfx2_pal_l  <= bg_ram_dout[12:11];
         
-        hc_r <= hc;
+//        hc_r <= hc;
+        hc_r <= hc_x;
         hc_s_r <= hc_s;
 
         // latch tile attributes
         bg_ram_dout_buf <= bg_ram_dout;
     // 1
-        gfx1_pix <= ( hc_r[0] == 0 ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
+        gfx1_pix <= ( hc[0] == 1 ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
 
         gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
         
@@ -728,6 +744,7 @@ wire input_p2_cs;
 wire input_system_cs;
 wire input_dsw_cs;
 
+wire flip_cs;
 wire scroll_x_cs;
 wire scroll_y_cs;
 
@@ -737,15 +754,15 @@ wire prot_chip_data_cs;
 wire prot_chip_cmd_cs;
 
 // Z80 selects
-wire z80_rom_cs;
-wire z80_ram_cs;
+wire z80_rom_cs /* synthesis keep */;
+wire z80_ram_cs /* synthesis keep */;
 
-wire z80_sound0_cs;
-wire z80_sound1_cs;
-wire z80_dac1_cs;
-wire z80_dac2_cs;
-wire z80_latch_clr_cs;
-wire z80_latch_r_cs;
+wire z80_sound0_cs /* synthesis keep */;
+wire z80_sound1_cs /* synthesis keep */;
+wire z80_dac1_cs /* synthesis keep */;
+wire z80_dac2_cs /* synthesis keep */;
+wire z80_latch_clr_cs /* synthesis keep */;
+wire z80_latch_r_cs /* synthesis keep */;
 
 // Select PCB Title and set chip select lines
 reg [2:0] pcb;
@@ -757,48 +774,93 @@ always @(posedge clk_sys)
     if (ioctl_wr && (ioctl_index==1))
         pcb <= ioctl_dout;
 
+//chip_select cs (.*);
+//chip_select cs (
+//    .pcb(pcb),
+//
+//    .m68k_a(m68k_a),
+//    .m68k_as_n(m68k_as_n),
+//
+//    .z80_addr(z80_addr),
+//    .MREQ_n(MREQ_n),
+//    .IORQ_n(IORQ_n),
+//    .M1_n(M1_n),
+//
+//    // M68K selects
+//    .prog_rom_cs(prog_rom_cs),
+//    .m68k_ram_cs(m68k_ram_cs),
+//    .bg_ram_cs(bg_ram_cs),
+//    .m68k_ram1_cs(m68k_ram1_cs),
+//    .fg_ram_cs(fg_ram_cs),
+//
+//    .input_p1_cs(input_p1_cs),
+//    .input_p2_cs(input_p2_cs),
+//    .input_system_cs(input_system_cs),
+//    .input_dsw_cs(input_dsw_cs),
+//
+//    .scroll_x_cs(scroll_x_cs),
+//    .scroll_y_cs(scroll_y_cs),
+//
+//    .sound_latch_cs(sound_latch_cs),
+//
+//    .prot_chip_data_cs(prot_chip_data_cs),
+//    .prot_chip_cmd_cs(prot_chip_cmd_cs),
+//
+//    // Z80 selects
+//    .z80_rom_cs(z80_rom_cs),
+//    .z80_ram_cs(z80_ram_cs),
+//
+//    .z80_sound0_cs(z80_sound0_cs),
+//    .z80_sound1_cs(z80_sound1_cs),
+//    .z80_dac1_cs(z80_dac1_cs),
+//    .z80_dac2_cs(z80_dac2_cs),
+//    .z80_latch_clr_cs(z80_latch_clr_cs),
+//    .z80_latch_r_cs(z80_latch_r_cs)
+//);
 chip_select cs (
-    .pcb(pcb),
+    .pcb,
 
-    .m68k_a(m68k_a),
-    .m68k_as_n(m68k_as_n),
+    .m68k_a,
+    .m68k_as_n,
 
-    .z80_addr(z80_addr),
-    .MREQ_n(MREQ_n),
-    .IORQ_n(IORQ_n),
-    .M1_n(M1_n),
+    .z80_addr,
+    .MREQ_n,
+    .IORQ_n,
+    .M1_n,
 
     // M68K selects
-    .prog_rom_cs(prog_rom_cs),
-    .m68k_ram_cs(m68k_ram_cs),
-    .bg_ram_cs(bg_ram_cs),
-    .m68k_ram1_cs(m68k_ram1_cs),
-    .fg_ram_cs(fg_ram_cs),
+    .prog_rom_cs,
+    .m68k_ram_cs,
+    .bg_ram_cs,
+    .m68k_ram1_cs,
+    .fg_ram_cs,
 
-    .input_p1_cs(input_p1_cs),
-    .input_p2_cs(input_p2_cs),
-    .input_system_cs(input_system_cs),
-    .input_dsw_cs(input_dsw_cs),
+    .input_p1_cs,
+    .input_p2_cs,
+    .input_system_cs,
+    .input_dsw_cs,
 
-    .scroll_x_cs(scroll_x_cs),
-    .scroll_y_cs(scroll_y_cs),
+    .flip_cs,
+    .scroll_x_cs,
+    .scroll_y_cs,
 
-    .sound_latch_cs(sound_latch_cs),
+    .sound_latch_cs,
 
-    .prot_chip_data_cs(prot_chip_data_cs),
-    .prot_chip_cmd_cs(prot_chip_cmd_cs),
+    .prot_chip_data_cs,
+    .prot_chip_cmd_cs,
 
     // Z80 selects
-    .z80_rom_cs(z80_rom_cs),
-    .z80_ram_cs(z80_ram_cs),
+    .z80_rom_cs,
+    .z80_ram_cs,
 
-    .z80_sound0_cs(z80_sound0_cs),
-    .z80_sound1_cs(z80_sound1_cs),
-    .z80_dac1_cs(z80_dac1_cs),
-    .z80_dac2_cs(z80_dac2_cs),
-    .z80_latch_clr_cs(z80_latch_clr_cs),
-    .z80_latch_r_cs(z80_latch_r_cs)
+    .z80_sound0_cs,
+    .z80_sound1_cs,
+    .z80_dac1_cs,
+    .z80_dac2_cs,
+    .z80_latch_clr_cs,
+    .z80_latch_r_cs
 );
+
 
 // CPU outputs
 wire m68k_rw         ;    // Read = 1, Write = 0
@@ -1265,24 +1327,27 @@ always @ (posedge clk_sys) begin
     end 
      
     if ( clk_16M == 1 ) begin
+        if (!m68k_rw & !m68k_lds_n & flip_cs) begin
+            cocktail_flip <= ~m68k_dout[2];
+        end
 
-         if (!m68k_rw & scroll_x_cs ) begin
-              scroll_x <= m68k_dout[15:0];
-         end
+        if (!m68k_rw & scroll_x_cs ) begin
+            scroll_x <= m68k_dout[15:0];
+        end
 
-         if (!m68k_rw & scroll_y_cs ) begin
-              scroll_y <= m68k_dout[15:0];
-         end
+        if (!m68k_rw & scroll_y_cs ) begin
+            scroll_y <= m68k_dout[15:0];
+        end
 
-         if (!m68k_rw & sound_latch_cs ) begin
-              sound_latch <= {m68k_dout[6:0],1'b1};
-         end
+        if (!m68k_rw & sound_latch_cs ) begin
+            sound_latch <= {m68k_dout[6:0],1'b1};
+        end
 
-         if (!m68k_rw & prot_chip_cmd_cs ) begin
+        if (!m68k_rw & prot_chip_cmd_cs ) begin
             prot_cmd <= m68k_dout[7:0] ;
-         end
+        end
 
-         if (!m68k_rw & prot_chip_data_cs ) begin
+        if (!m68k_rw & prot_chip_data_cs ) begin
             if ( prot_cmd == 8'h33 ) begin
                 if ( prot_state == 0 ) begin
                     nb1412m2_addr[15:8] <= m68k_dout[7:0] ; 
