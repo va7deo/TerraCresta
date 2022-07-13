@@ -14,6 +14,10 @@
 //  with this program; if not, write to the Free Software Foundation, Inc.,
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+
+// Darren Olafson 2022
+//
+// Jun 2022 -- added screen flip from https://github.com/gyurco/Mist_FPGA
 //============================================================================
 
 `default_nettype none
@@ -629,15 +633,10 @@ arcade_video #(256,24) arcade_video
 wire [11:0] spr_pix = sprite_line_buffer[hc_x];
 
 // prom_s = idx 
-//wire [7:0]  spr_col_idx = spr_pix[3:0];
 
 reg   [7:0] spi, spi_r;
 reg         spr_transp, spr_transp_r;
 
-//wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
-
-//wire  [9:0] hc_s = hc[7:0] + scroll_x ;
-//wire  [8:0] vc_s = vc[7:0] + scroll_y ;
 
 wire  [9:0] hc_s = flip ? ~hc[7:0] + scroll_x + 9'd256 : hc[7:0] + scroll_x ;
 wire  [8:0] vc_s = flip ? ~vc[7:0] + scroll_y + 9'd256 : vc[7:0] + scroll_y;
@@ -647,9 +646,6 @@ wire  [8:0] vc_x = vc ^ {9{flip}};
 
 reg  [3:0] gfx1_pix ;
 reg  [7:0] gfx2_pix ;
-
-//wire [11:0] bg_tile = { hc_s[9:4], vc_s[8:4] };
-//wire  [9:0] fg_tile = {   hc[7:3],   vc[7:3] };
 
 wire [11:0] bg_tile = { hc_s[9:4], vc_s[8:4] };
 wire  [9:0] fg_tile = { hc_x[7:3], vc_x[7:3] };
@@ -687,18 +683,15 @@ reg   [1:0] gfx2_pal_l_r;
 always @ (posedge clk_sys) begin
     if (clk_6M == 1) begin
     // 0
-        //gfx1_addr <= { ( (pcb == 0 ) ? 1'b0 : fg_ram_dout[8] ) , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
-//        if (hc_x[0])
-            gfx1_addr <= { 1'b0 , fg_ram_dout[7:0],   vc_x[2:0],   hc_x[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
+        gfx1_addr <= { 1'b0 , fg_ram_dout[7:0],   vc_x[2:0],   hc_x[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
 
-//        if (hc_s[0]) begin
-            gfx2_addr <= { bg_ram_dout[9:0], vc_s[3:0], hc_s[3:1] } ;
-        
-            gfx2_pal_h   <= bg_ram_dout[14:13];
-            gfx2_pal_l   <= bg_ram_dout[12:11];
-            gfx2_pal_h_r <= gfx2_pal_h;
-            gfx2_pal_l_r <= gfx2_pal_l;
-//        end
+        gfx2_addr <= { bg_ram_dout[9:0], vc_s[3:0], hc_s[3:1] } ;
+    
+        gfx2_pal_h   <= bg_ram_dout[14:13];
+        gfx2_pal_l   <= bg_ram_dout[12:11];
+        gfx2_pal_h_r <= gfx2_pal_h;
+        gfx2_pal_l_r <= gfx2_pal_l;
+
         spi <= { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
         spr_transp <= ( spr_pix == sprite_trans_pen );
 
@@ -715,42 +708,9 @@ always @ (posedge clk_sys) begin
     end
 end
 
-//wire  [3:0] gfx2_pen = (flip ^ hc_s[0]) ? gfx2_dout[3:0] : gfx2_dout[7:4];
 wire  [3:0] gfx2_pen = hc_s[0] ? gfx2_dout[3:0] : gfx2_dout[7:4];
     
-//always @ (posedge clk_sys) begin
-//    if ( reset == 1 ) begin
-//
-//    end else if ( clk_6M == 1 ) begin
-//    // 0
-//        //gfx1_addr <= { ( (pcb == 0 ) ? 1'b0 : fg_ram_dout[8] ) , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
-//        //gfx1_addr <= { 1'b0 , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
-//        
-//       
-//            gfx2_addr <= { bg_ram_dout[9:0], vc_s[3:0], hc_s[3:1] } ;
-//        
-//            gfx2_pal_h  <= bg_ram_dout[14:13];
-//            gfx2_pal_l  <= bg_ram_dout[12:11];
-//        
-////        hc_r <= hc;
-//        hc_r <= hc_x;
-//        hc_s_r <= hc_s;
-//
-//        // latch tile attributes
-//        bg_ram_dout_buf <= bg_ram_dout;
-//    // 1
-//        gfx1_pix <= ( hc[0] == 1 ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
-//
-//        gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
-//        
-//    // 2
-//        pal_idx <= ( gfx1_pix < 4'hf && fg_enable ) ? { 4'b0, gfx1_pix } : ( spr_enable == 0 || ( bg_enable == 1 && spr_pix == sprite_trans_pen && scroll_x[13] == 0 )) ? gfx2_pix :  spi ;        
-//    end
-//end
-//    
-//wire [3:0] gfx2_pen ;
-//assign gfx2_pen = ((   hc_s_r[0] == 0 ) ? gfx2_dout[3:0] : gfx2_dout[7:4] )    ;
-    
+   
 /// 68k cpu
 
 always @ (posedge clk_sys) begin
@@ -818,49 +778,6 @@ always @(posedge clk_sys)
     if (ioctl_wr && (ioctl_index==1))
         pcb <= ioctl_dout;
 
-//chip_select cs (.*);
-//chip_select cs (
-//    .pcb(pcb),
-//
-//    .m68k_a(m68k_a),
-//    .m68k_as_n(m68k_as_n),
-//
-//    .z80_addr(z80_addr),
-//    .MREQ_n(MREQ_n),
-//    .IORQ_n(IORQ_n),
-//    .M1_n(M1_n),
-//
-//    // M68K selects
-//    .prog_rom_cs(prog_rom_cs),
-//    .m68k_ram_cs(m68k_ram_cs),
-//    .bg_ram_cs(bg_ram_cs),
-//    .m68k_ram1_cs(m68k_ram1_cs),
-//    .fg_ram_cs(fg_ram_cs),
-//
-//    .input_p1_cs(input_p1_cs),
-//    .input_p2_cs(input_p2_cs),
-//    .input_system_cs(input_system_cs),
-//    .input_dsw_cs(input_dsw_cs),
-//
-//    .scroll_x_cs(scroll_x_cs),
-//    .scroll_y_cs(scroll_y_cs),
-//
-//    .sound_latch_cs(sound_latch_cs),
-//
-//    .prot_chip_data_cs(prot_chip_data_cs),
-//    .prot_chip_cmd_cs(prot_chip_cmd_cs),
-//
-//    // Z80 selects
-//    .z80_rom_cs(z80_rom_cs),
-//    .z80_ram_cs(z80_ram_cs),
-//
-//    .z80_sound0_cs(z80_sound0_cs),
-//    .z80_sound1_cs(z80_sound1_cs),
-//    .z80_dac1_cs(z80_dac1_cs),
-//    .z80_dac2_cs(z80_dac2_cs),
-//    .z80_latch_clr_cs(z80_latch_clr_cs),
-//    .z80_latch_r_cs(z80_latch_r_cs)
-//);
 chip_select cs (
     .pcb,
 
