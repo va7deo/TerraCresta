@@ -64,16 +64,15 @@ set_global_assignment -name VERILOG_MACRO "MISTER_FB=1"
 # disable adaptive scanline filtering
 set_global_assignment -name VERILOG_MACRO "MISTER_DISABLE_ADAPTIVE=1"
 
-#enable dimming during pause
-set_global_assignment -name VERILOG_MACRO "PAUSE_OUTPUT_DIM=1"
-
 # Enable YC / Composite output
 set_global_assignment -name VERILOG_MACRO "MISTER_ENABLE_YC=1"
+
+#enable dimming during pause
+set_global_assignment -name VERILOG_MACRO "PAUSE_OUTPUT_DIM=1"
 
 source sys/sys.tcl
 source sys/sys_analog.tcl
 source files.qip
-
 set_global_assignment -name ENABLE_SIGNALTAP OFF
 
 

@@ -237,7 +237,6 @@ localparam CONF_STR = {
     "P1-;",
     "P1O89,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
     "P1OA,Orientation,Horz,Vert;",
-    "P1OC,Flip,Off,On;",
     "P1-;",
     "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
     "P1-;",
@@ -449,6 +448,7 @@ end
 wire    pause_cpu;
 wire    hs_pause;
 
+
 // 8 bits per colour, 72MHz sys clk
 pause #(8,8,8,72) pause 
 (
@@ -469,9 +469,8 @@ pause #(8,8,8,72) pause
 wire [23:0] rgb_pause_out;
 wire dim_video;
 
-wire menu_flip = status[12];
 reg  cocktail_flip;
-wire flip = menu_flip ^ cocktail_flip;
+wire flip = cocktail_flip;
 
 wire pll_locked;
 
@@ -591,7 +590,7 @@ video_timing video_timing (
     .vsync(vsync)
 );
 
-screen_rotate screen_rotate (.*);
+screen_rotate screen_rotate (.*, .flip(0) );
 
 arcade_video #(256,24) arcade_video
 (
@@ -627,24 +626,33 @@ arcade_video #(256,24) arcade_video
     assign PALFLAG = status[2];
 `endif
 
-wire [11:0] spr_pix = sprite_line_buffer[hc];
+wire [11:0] spr_pix = sprite_line_buffer[hc_x];
 
 // prom_s = idx 
 //wire [7:0]  spr_col_idx = spr_pix[3:0];
 
-wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
+reg   [7:0] spi, spi_r;
+reg         spr_transp, spr_transp_r;
 
-wire  [9:0] hc_s = hc[7:0] + scroll_x ;
-wire  [8:0] vc_s = vc[7:0] + scroll_y ;
+//wire [7:0] spi = { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
+
+//wire  [9:0] hc_s = hc[7:0] + scroll_x ;
+//wire  [8:0] vc_s = vc[7:0] + scroll_y ;
+
+wire  [9:0] hc_s = flip ? ~hc[7:0] + scroll_x + 9'd256 : hc[7:0] + scroll_x ;
+wire  [8:0] vc_s = flip ? ~vc[7:0] + scroll_y + 9'd256 : vc[7:0] + scroll_y;
 
 wire  [8:0] hc_x = {hc[8], hc[7:0] ^ {8{flip}}};
-//wire  [8:0] vc_x = vc ^ {9{flip}};
+wire  [8:0] vc_x = vc ^ {9{flip}};
 
 reg  [3:0] gfx1_pix ;
 reg  [7:0] gfx2_pix ;
 
+//wire [11:0] bg_tile = { hc_s[9:4], vc_s[8:4] };
+//wire  [9:0] fg_tile = {   hc[7:3],   vc[7:3] };
+
 wire [11:0] bg_tile = { hc_s[9:4], vc_s[8:4] };
-wire  [9:0] fg_tile = {   hc[7:3],   vc[7:3] };
+wire  [9:0] fg_tile = { hc_x[7:3], vc_x[7:3] };
 
 reg [7:0] pal_idx;
 
@@ -652,9 +660,7 @@ always @ ( clk_6M ) begin
     rgb <=  { prom_r[pal_idx], 4'b0, prom_g[pal_idx], 4'b0, prom_b[pal_idx], 4'b0 } ;
 end
 
-
 reg [7:0] gfxc ;
-
 
 reg [15:0] fg_ram_dout_buf;
 reg [15:0] bg_ram_dout_buf;
@@ -674,38 +680,76 @@ reg [8:0] hc_r;
 reg [8:0] hc_s_r;
 reg [1:0] gfx2_pal_h;
 reg [1:0] gfx2_pal_l;
-    
-always @ (posedge clk_sys) begin
-    if ( reset == 1 ) begin
 
-    end else if ( clk_6M == 1 ) begin
+reg   [1:0] gfx2_pal_h_r;
+reg   [1:0] gfx2_pal_l_r;
+
+always @ (posedge clk_sys) begin
+    if (clk_6M == 1) begin
     // 0
         //gfx1_addr <= { ( (pcb == 0 ) ? 1'b0 : fg_ram_dout[8] ) , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
-        gfx1_addr <= { 1'b0 , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
-        
-        gfx2_addr <= { bg_ram_dout[9:0], vc_s[3:0], hc_s[3:1] } ;
-        
-        gfx2_pal_h  <= bg_ram_dout[14:13];
-        gfx2_pal_l  <= bg_ram_dout[12:11];
-        
-//        hc_r <= hc;
-        hc_r <= hc_x;
-        hc_s_r <= hc_s;
+//        if (hc_x[0])
+            gfx1_addr <= { 1'b0 , fg_ram_dout[7:0],   vc_x[2:0],   hc_x[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
 
-        // latch tile attributes
-        bg_ram_dout_buf <= bg_ram_dout;
+//        if (hc_s[0]) begin
+            gfx2_addr <= { bg_ram_dout[9:0], vc_s[3:0], hc_s[3:1] } ;
+        
+            gfx2_pal_h   <= bg_ram_dout[14:13];
+            gfx2_pal_l   <= bg_ram_dout[12:11];
+            gfx2_pal_h_r <= gfx2_pal_h;
+            gfx2_pal_l_r <= gfx2_pal_l;
+//        end
+        spi <= { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
+        spr_transp <= ( spr_pix == sprite_trans_pen );
+
     // 1
-        gfx1_pix <= ( hc[0] == 1 ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
+        gfx1_pix <= ( hc[0] ^ flip ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
 
-        gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
-        
+        gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l_r : gfx2_pal_h_r ), gfx2_pen } ;
+
+        spi_r <= spi;
+
+        spr_transp_r <= spr_transp;
     // 2
-        pal_idx <= ( gfx1_pix < 4'hf && fg_enable ) ? { 4'b0, gfx1_pix } : ( spr_enable == 0 || ( bg_enable == 1 && spr_pix == sprite_trans_pen && scroll_x[13] == 0 )) ? gfx2_pix :  spi ;        
+        pal_idx <= ( gfx1_pix < 4'hf && fg_enable ) ? { 4'b0, gfx1_pix } : ( spr_enable == 0 || ( bg_enable == 1 && spr_transp_r && scroll_x[13] == 0 )) ? gfx2_pix :  spi_r;
     end
 end
+
+//wire  [3:0] gfx2_pen = (flip ^ hc_s[0]) ? gfx2_dout[3:0] : gfx2_dout[7:4];
+wire  [3:0] gfx2_pen = hc_s[0] ? gfx2_dout[3:0] : gfx2_dout[7:4];
     
-wire [3:0] gfx2_pen ;
-assign gfx2_pen = ((   hc_s_r[0] == 0 ) ? gfx2_dout[3:0] : gfx2_dout[7:4] )    ;
+//always @ (posedge clk_sys) begin
+//    if ( reset == 1 ) begin
+//
+//    end else if ( clk_6M == 1 ) begin
+//    // 0
+//        //gfx1_addr <= { ( (pcb == 0 ) ? 1'b0 : fg_ram_dout[8] ) , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
+//        //gfx1_addr <= { 1'b0 , fg_ram_dout[7:0],   vc[2:0],   hc[2:1] } ;  // tile #.  set of 256 tiles -- fg_ram_dout[7:0]
+//        
+//       
+//            gfx2_addr <= { bg_ram_dout[9:0], vc_s[3:0], hc_s[3:1] } ;
+//        
+//            gfx2_pal_h  <= bg_ram_dout[14:13];
+//            gfx2_pal_l  <= bg_ram_dout[12:11];
+//        
+////        hc_r <= hc;
+//        hc_r <= hc_x;
+//        hc_s_r <= hc_s;
+//
+//        // latch tile attributes
+//        bg_ram_dout_buf <= bg_ram_dout;
+//    // 1
+//        gfx1_pix <= ( hc[0] == 1 ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
+//
+//        gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
+//        
+//    // 2
+//        pal_idx <= ( gfx1_pix < 4'hf && fg_enable ) ? { 4'b0, gfx1_pix } : ( spr_enable == 0 || ( bg_enable == 1 && spr_pix == sprite_trans_pen && scroll_x[13] == 0 )) ? gfx2_pix :  spi ;        
+//    end
+//end
+//    
+//wire [3:0] gfx2_pen ;
+//assign gfx2_pen = ((   hc_s_r[0] == 0 ) ? gfx2_dout[3:0] : gfx2_dout[7:4] )    ;
     
 /// 68k cpu
 
@@ -927,7 +971,7 @@ always @ (posedge clk_sys ) begin
         copy_sprite_state <= 3; 
     end else if ( copy_sprite_state == 3 ) begin        
        // address 0 result
-        sprite_y_pos <= 239 - sprite_shared_ram_dout;
+        sprite_y_pos <= flip ? sprite_shared_ram_dout : 8'd239 - sprite_shared_ram_dout;
 
         sprite_shared_addr <= sprite_shared_addr + 1 ;
         copy_sprite_state <= 4; 
@@ -953,7 +997,8 @@ always @ (posedge clk_sys ) begin
         // flip x?
         sprite_flip_x <= sprite_shared_ram_dout[2] ^ test_flip_x ;
         // flip y?
-        sprite_flip_y <= sprite_shared_ram_dout[3] ^ test_flip_y ;
+//        sprite_flip_y <= sprite_shared_ram_dout[3] ^ test_flip_y ;
+        sprite_flip_y <= sprite_shared_ram_dout[3] ^ flip ^ test_flip_y ;
         // colour
         sprite_colour <= sprite_shared_ram_dout[7:4];
 
@@ -961,7 +1006,8 @@ always @ (posedge clk_sys ) begin
 
         copy_sprite_state <= 6; 
     end else if ( copy_sprite_state == 6 ) begin        
-        sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - 8'h7e ;
+        //sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - 8'h7e ;
+        sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - (flip ? 8'h81 : 8'h7e) ;
 
         copy_sprite_state <= 7; 
     end else if ( copy_sprite_state == 7 ) begin                
@@ -1328,7 +1374,7 @@ always @ (posedge clk_sys) begin
      
     if ( clk_16M == 1 ) begin
         if (!m68k_rw & !m68k_lds_n & flip_cs) begin
-            cocktail_flip <= ~m68k_dout[2];
+            cocktail_flip <= m68k_dout[2];
         end
 
         if (!m68k_rw & scroll_x_cs ) begin
