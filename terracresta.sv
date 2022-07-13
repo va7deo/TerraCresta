@@ -60,7 +60,7 @@ module emu
     output        VGA_VS,
     output        VGA_DE,    // = ~(VBlank | HBlank)
     output        VGA_F1,
-    output [1:0]  VGA_SL,
+    output [2:0]  VGA_SL,
     output        VGA_SCALER, // Force VGA scaler
 
     input  [11:0] HDMI_WIDTH,
@@ -242,7 +242,8 @@ localparam CONF_STR = {
     "P1O89,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
     "P1OA,Orientation,Horz,Vert;",
     "P1-;",
-    "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
+    "P1O46,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%,CRT 100%;",
+    "P1OB,Force Scandoubler,Off,On;",
     "P1-;",
     "P1O2,Video Mode,NTSC,PAL;",
     "P1OL,Video Signal,RGBS/YPbPr,Y/C;",
@@ -273,7 +274,9 @@ localparam CONF_STR = {
     "V,v",`BUILD_DATE
 };
 
-wire forced_scandoubler;
+wire hps_forced_scandoubler;
+wire forced_scandoubler = hps_forced_scandoubler | status[11];
+
 wire  [1:0] buttons;
 wire [63:0] status;
 wire [10:0] ps2_key;
@@ -288,7 +291,7 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
     .ps2_key(ps2_key),
     .status(status),
     .status_menumask(direct_video),
-    .forced_scandoubler(forced_scandoubler),
+    .forced_scandoubler(hps_forced_scandoubler),
     .gamma_bus(gamma_bus),
     .direct_video(direct_video),
     .video_rotated(video_rotated),
