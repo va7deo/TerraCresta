@@ -24,10 +24,10 @@ wire [8:0] HS_START   = 300;
 wire [8:0] HS_END     = 332;
 wire [8:0] HTOTAL     = 383;
 
-wire [8:0] VBL_START  = 223;
-wire [8:0] VBL_END    = 263;
-wire [8:0] VS_START   = 235;
-wire [8:0] VS_END     = 243;
+wire [8:0] VBL_START  = 239;
+wire [8:0] VBL_END    = 16;
+wire [8:0] VS_START   = 251;
+wire [8:0] VS_END     = 259;
 wire [8:0] VTOTAL     = 263;
 
 reg [8:0] v;
@@ -35,9 +35,6 @@ reg [8:0] h;
 
 assign vc = v;
 assign hc = h;
-
-//assign hsync = ( h >= (HS_START + $signed(hs_offset)) && h < (HS_END + $signed(hs_offset)) );
-//assign vsync = ( v >= (VS_START + $signed(vs_offset)) && v < (VS_END + $signed(vs_offset)) );
 
 always @ (posedge clk) begin
 	if (reset) begin

@@ -561,34 +561,16 @@ wire [8:0] vc;
 wire hsync;
 wire vsync;
 
-//reg hbl_delay;
-//reg vbl_delay;
-//reg hsync_delay;
-//reg vsync_delay;
-//
-//// 4 clock pipeline to make pixel
-//always @ (posedge clk_sys) begin
-//    if ( clk_4M == 1 ) begin
-//        hbl_delay <= hbl;
-//        vbl_delay <= vbl;
-//
-//        hsync_delay <= hsync;
-//        vsync_delay <= vsync;
-//    end
-//end
 wire hbl_delay, vbl_delay;
 
 delay delay_hbl( .clk(clk_6M), .i( hbl ), .o(hbl_delay) ) ;
 delay delay_vbl( .clk(clk_6M), .i( vbl ), .o(vbl_delay) ) ;
 
-wire [8:0] vc_raw;
-assign vc = vc_raw + 16; 
-
 video_timing video_timing (
     .clk(clk_sys),
     .clk_pix(clk_6M),
     .hc(hc),
-    .vc(vc_raw),
+    .vc(vc),
     .hs_offset(hs_offset),
     .vs_offset(vs_offset),
     .hbl(hbl),
@@ -680,9 +662,6 @@ reg [8:0] hc_s_r;
 reg [1:0] gfx2_pal_h;
 reg [1:0] gfx2_pal_l;
 
-reg   [1:0] gfx2_pal_h_r;
-reg   [1:0] gfx2_pal_l_r;
-
 always @ (posedge clk_sys) begin
     if (clk_6M == 1) begin
     // 0
@@ -692,8 +671,6 @@ always @ (posedge clk_sys) begin
     
         gfx2_pal_h   <= bg_ram_dout[14:13];
         gfx2_pal_l   <= bg_ram_dout[12:11];
-        gfx2_pal_h_r <= gfx2_pal_h;
-        gfx2_pal_l_r <= gfx2_pal_l;
 
         spi <= { 2'b10, ( ( spr_pix[3] == 1'b0 ) ? spr_pix[9:8] : spr_pix[11:10] ), prom_s[ spr_pix[7:0] ][3:0] };  //p[3:0];
         spr_transp <= ( spr_pix == sprite_trans_pen );
@@ -701,7 +678,7 @@ always @ (posedge clk_sys) begin
     // 1
         gfx1_pix <= ( hc[0] ^ flip ) ? gfx1_dout[3:0] : gfx1_dout[7:4];
 
-        gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l_r : gfx2_pal_h_r ), gfx2_pen } ;
+        gfx2_pix <= { 2'b11 , ((gfx2_pen[3] == 0 ) ? gfx2_pal_l : gfx2_pal_h ), gfx2_pen } ;
 
         spi_r <= spi;
 
@@ -877,6 +854,7 @@ always @ (posedge clk_sys ) begin
             // deassert interrupt since 68k ack'ed.
             m68k_ipl2_n <= 1 ;
         end
+        
     end
 
     //   copy sprite list to dedicated sprite list ram
@@ -891,7 +869,7 @@ always @ (posedge clk_sys ) begin
         copy_sprite_state <= 3; 
     end else if ( copy_sprite_state == 3 ) begin        
        // address 0 result
-        sprite_y_pos <= flip ? sprite_shared_ram_dout : 8'd239 - sprite_shared_ram_dout;
+        sprite_y_pos <= flip ? sprite_shared_ram_dout - 1 : 8'd239 - sprite_shared_ram_dout;
 
         sprite_shared_addr <= sprite_shared_addr + 1 ;
         copy_sprite_state <= 4; 
@@ -917,7 +895,6 @@ always @ (posedge clk_sys ) begin
         // flip x?
         sprite_flip_x <= sprite_shared_ram_dout[2] ^ test_flip_x ;
         // flip y?
-//        sprite_flip_y <= sprite_shared_ram_dout[3] ^ test_flip_y ;
         sprite_flip_y <= sprite_shared_ram_dout[3] ^ flip ^ test_flip_y ;
         // colour
         sprite_colour <= sprite_shared_ram_dout[7:4];
@@ -926,9 +903,7 @@ always @ (posedge clk_sys ) begin
 
         copy_sprite_state <= 6; 
     end else if ( copy_sprite_state == 6 ) begin        
-        //sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - 8'h7e ;
-        sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - (flip ? 8'h81 : 8'h7e) ;
-
+        sprite_x_pos <=  { sprite_x_256, sprite_shared_ram_dout } - 8'h80; 
         copy_sprite_state <= 7; 
     end else if ( copy_sprite_state == 7 ) begin                
         sprite_buffer_w <= 1;
@@ -950,7 +925,7 @@ always @ (posedge clk_sys ) begin
         end
     end
 
-    if ( draw_sprite_state == 0 && hc > 9'h0ff && next_y > 15  ) begin // 0xe0
+    if ( draw_sprite_state == 0 && hc > 9'h0ff ) begin 
         // clear sprite buffer
         sprite_x_ofs <= 0;
         draw_sprite_state <= 1;
@@ -968,11 +943,11 @@ always @ (posedge clk_sys ) begin
         {sprite_tile,sprite_x_pos,sprite_y_pos,sprite_colour,sprite_flip_x,sprite_flip_y} <= sprite_buffer_dout; //[34:0];
         draw_sprite_state <= 3;
         sprite_x_ofs <= 0;
-    end else if (draw_sprite_state == 3) begin    
+    end else if (draw_sprite_state == 3) begin
         draw_sprite_state <= 4;
-    end else if (draw_sprite_state == 4) begin                
+    end else if (draw_sprite_state == 4) begin
         draw_sprite_state <= 3; 
-        if ( vc >= sprite_y_pos && vc < ( sprite_y_pos + 16 ) && sprite_x_pos < 256 ) begin
+        if ( vc >= sprite_y_pos && vc < ( sprite_y_pos + 16 ) ) begin  
             // fetch bitmap 
             if ( p[3:0] != sprite_trans_pen ) begin
                 sprite_line_buffer[sprite_x_pos] <= p;
@@ -1030,46 +1005,12 @@ always @ (*) begin
     end
 end
 
-// sprite_tile[9:8] <= { sprite_shared_ram_dout[1], sprite_shared_ram_dout[4] };
-
-//		int tile = pSource[1]&0xff;
-//		int attrs = pSource[2];
-//		int flipx = attrs&0x04;
-//		int flipy = attrs&0x08;
-//		int color = (attrs&0xf0)>>4;
-//		int sx = (pSource[3] & 0xff) - 0x80 + 256 * (attrs & 1);
-//		int sy = 240 - (pSource[0] & 0xff);
-//
-//		if( transparent_pen )
-//		{
-//			int bank;
-//
-//			if( attrs&0x02 ) tile |= 0x200; // sprite_shared_ram_dout[1]
-//			if( attrs&0x10 ) tile |= 0x100; // sprite_shared_ram_dout[4] 
-//
-//			bank = (tile&0xfc)>>1;
-//			if( tile&0x200 ) bank |= 0x80; // sprite_shared_ram_dout[1]
-//			if( tile&0x100 ) bank |= 0x01; // sprite_shared_ram_dout[4] 
-//
-//			color &= 0xe;
-//			color += 16*(spritepalettebank[bank]&0xf);
-//		}
-//		else
-//		{
-//			if( attrs&0x02 ) tile|= 0x100;
-//			color += 16 * (spritepalettebank[(tile>>1)&0xff] & 0x0f);
-//		}
-
-        
-
-
-
 wire    [7:0] next_y ;
 assign next_y = (vc+1'b1);
 
 reg     [7:0] sprite_x_ofs;
 
-reg    [11:0] sprite_line_buffer [255:0];
+reg    [11:0] sprite_line_buffer [271:0];
 
 dual_port_ram #(.LEN(64), .DATA_WIDTH(64)) sprite_buffer (
     .clock_a ( clk_sys ),
@@ -1405,20 +1346,6 @@ dual_port_ram #(.LEN(8192)) nb1412m2_adj (
     .data_b ( ioctl_dout  ),
     .q_b( )
     );
-    
-//dual_port_ram #(.LEN(8192)) nb1412m2_rom (
-//    .clock_a ( clk_sys ),
-//    .address_a ( prot_rom_addr ),
-//    .wren_a ( 1'b0 ),
-//    .data_a ( ),
-//    .q_a ( nb1412m2_rom_dout ),
-//    
-//    .clock_b ( clk_sys ),
-//    .address_b ( ioctl_addr[12:0] ),
-//    .wren_b ( nb1412m2_ioctl_wr ),
-//    .data_b ( ioctl_dout  ),
-//    .q_b( )
-//    );    
     
 
 wire [15:0] ram68k_dout;
