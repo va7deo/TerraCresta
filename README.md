@@ -25,7 +25,6 @@ The intent of this implementation is for gameplay to be 1:1 of the Nichibutsu (T
 
 # Known Issues
 
-- **No known issues**  <br>
 - ~~Clock domains need to be verified~~  
 - ~~H/V clock timing for CRT need to be verified~~  
 - ~~Palette issue (wrong colors, stray green/tan lines)~~  
@@ -37,12 +36,12 @@ The intent of this implementation is for gameplay to be 1:1 of the Nichibutsu (T
 - ~~Protection IC **NB1412M2** implementation~~  
 - ~~Input swap on amatelass, amazon, horekidb~~  
 - ~~Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)~~  
-- ~~Screen Flip implementation  ~~
-- ~~Sprite Clipping  ~~
+- ~~Screen Flip implementation~~  
+- ~~Sprite Clipping~~
 
-#Tasks
+# Remaining Tasks
 
-- Reverse engineer Terra Cresta and provide schematics  
+- **Reverse engineer Terra Cresta and provide schematics**  
 
 # PCB Check List
 
