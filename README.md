@@ -3,7 +3,7 @@
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O).  Terra Cresta YM2203 OPN Type PCB donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich). 
 
-The intent of this implementation is for gameplay to be 1:1 of the Nichibutsu (Terra Cresta based) 68000 hardware. This core was development with assistance from [**atrac17**](https://github.com/atrac17).
+The goal for this implementation is gameplay to be 1:1 of the Nichibutsu (Terra Cresta based) 68000 hardware. This core was developed with assistance from [**atrac17**](https://github.com/atrac17).
 
 ![Nichibutsu TC](https://user-images.githubusercontent.com/32810066/172844714-a23fce6b-2eab-4c47-ae46-e0c48f447c84.png)
 
