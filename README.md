@@ -65,7 +65,7 @@ X1       | 12.000     | Z80 / YM3526 |
 
 **Estimated geometry:**
 
-    383 pixels/line
+    384 pixels/line
   
     263 pixels/line
 
