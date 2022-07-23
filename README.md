@@ -3,7 +3,7 @@
 
 FPGA compatible core of Nichibutsu M68000 (Terra Cresta Based) arcade hardware for [**MiSTerFPGA**](https://github.com/MiSTer-devel/Main_MiSTer/wiki) written by [**Darren Olafson**](https://twitter.com/Darren__O).  Terra Cresta YM2203 OPN Type PCB donated by [**@atrac17**](https://twitter.com/_atrac17) / [**@djhardrich**](https://twitter.com/djhardrich). 
 
-The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra Cresta based) 68000 hardware. Currently in an beta state, this core is in active development with assistance from [**atrac17**](https://github.com/atrac17).
+The intent of this implementation is for gameplay to be 1:1 of the Nichibutsu (Terra Cresta based) 68000 hardware. This core was development with assistance from [**atrac17**](https://github.com/atrac17).
 
 ![Nichibutsu TC](https://user-images.githubusercontent.com/32810066/172844714-a23fce6b-2eab-4c47-ae46-e0c48f447c84.png)
 
@@ -23,8 +23,9 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 | [**t80**](https://opencores.org/projects/t80) | [**Zilog Z80 CPU**](https://en.wikipedia.org/wiki/Zilog_Z80)           | Daniel Wallner |
 | [**jtopl**](https://github.com/jotego/jtopl)  | [**Yamaha OPL**](https://en.wikipedia.org/wiki/Yamaha_OPL#OPL)         | Jose Tejada    |
 
-# Known Issues / Tasks
+# Known Issues
 
+- **No known issues**  <br>
 - ~~Clock domains need to be verified~~  
 - ~~H/V clock timing for CRT need to be verified~~  
 - ~~Palette issue (wrong colors, stray green/tan lines)~~  
@@ -36,7 +37,11 @@ The intent is for this core to be a 1:1 implementation of the Nichibutsu (Terra 
 - ~~Protection IC **NB1412M2** implementation~~  
 - ~~Input swap on amatelass, amazon, horekidb~~  
 - ~~Sprite / Tile offsets in Kid no Hore Hore Daisakusen (screen transitions)~~  
-- Screen Flip implementation  
+- ~~Screen Flip implementation  ~~
+- ~~Sprite Clipping  ~~
+
+#Tasks
+
 - Reverse engineer Terra Cresta and provide schematics  
 
 # PCB Check List
