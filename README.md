@@ -143,10 +143,3 @@ Kid no Hore Hore Daisakusen| 4-Way | <img src="https://user-images.githubusercon
 |--|
 |<table> <tr><th>Functions</th><th>Keymap</th></tr><tr><td>Layer (FG)</td><td>F7</td></tr><tr><td>Layer (BG)</td><td>F8</td></tr><tr><td>Layer (SP)</td><td>F9</td></tr> </table> |
 
-# Support
-
-Please consider showing support for this and future projects via [**Ko-fi**](https://ko-fi.com/darreno). While it isn't necessary, it's greatly appreciated.
-
-# Licensing
-
-Contact the author for special licensing needs. Otherwise follow the GPLv2 license attached.
